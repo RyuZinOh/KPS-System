@@ -60,5 +60,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 This project is actively maintained and is open for contributions. Feel free to check out the [issues](https://github.com/RyuZinOh/KPS-System/Issues) page to see what's currently being worked on or to report any problems.
 
 
-
-In this combined README, we added a status section at the end to provide an overview of the project's status. Replace `your-username` in the Git clone URL with your actual GitHub username when creating the repository. Also, make sure to include the `student_management_system.c` file and any other necessary files in the repository. The status card will update automatically based on your repository's actual size and license.
