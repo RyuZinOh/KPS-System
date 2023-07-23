@@ -1,0 +1,64 @@
+# KPS-System
+![GitHub repo size](https://img.shields.io/github/repo-size/RyuZinOh/KPS-System)
+![GitHub license](https://img.shields.io/github/license/RyuZinOh/KPS-System)
+![GitHub language](https://img.shields.io/github/languages/top/RyuZinOh/KPS-System?style=for-the-badge)
+
+This repository contains a simple Student Management System written in C. The program allows users to add, view, update, and delete student records. It demonstrates basic file handling operations for data storage.
+
+## Dependencies
+
+The Student Management System does not have any external dependencies. It is implemented using standard C libraries and functions.
+
+## How to Run
+
+To run the KPS-System on your local machine, follow these steps:
+
+1. Clone the repository to your local machine using Git:
+   ```bash
+   git clone https://github.com/RyuZinOh/KPS-System.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd KPS-System
+   ```
+
+3. Compile the C program using a C compiler (e.g., gcc):
+   ```bash
+   gcc KPS.c
+   ```
+
+4. Run the executable:
+   ```bash
+   ./KPS.exe
+   ```
+
+## Usage
+
+- Upon running the program, you will be presented with a menu of options:
+  ```
+  Student Management System Menu
+  1. Add a Student
+  2. View All Students
+  3. Update Student Details
+  4. Delete a Student
+  5. Exit
+  ```
+- Use the corresponding option number to perform the desired operation.
+- The student data will be stored in the `students.txt` file in the project directory.
+
+## Contribution
+
+Contributions to the Student Management System project are welcome! If you find any bugs or have suggestions for improvements, please feel free to open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Status
+
+This project is actively maintained and is open for contributions. Feel free to check out the [issues](https://github.com/RyuZinOh/KPS-System/Issues) page to see what's currently being worked on or to report any problems.
+
+
+
+In this combined README, we added a status section at the end to provide an overview of the project's status. Replace `your-username` in the Git clone URL with your actual GitHub username when creating the repository. Also, make sure to include the `student_management_system.c` file and any other necessary files in the repository. The status card will update automatically based on your repository's actual size and license.
