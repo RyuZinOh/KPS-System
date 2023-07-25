@@ -38,14 +38,13 @@ To run the KPS-System on your local machine, follow these steps:
 - Upon running the program, you will be presented with a menu of options:
   ```
   Student Management System Menu
-  1. Add a Student
-  2. View All Students
-  3. Update Student Details
-  4. Delete a Student
-  5. Exit
+  1. Attandance Section
+  2. Accouting Section
+  3. Result Section
+  4. Exit
   ```
 - Use the corresponding option number to perform the desired operation.
-- The student data will be stored in the `students.txt` file in the project directory.
+- The student data will be stored in the corresponding `.txt` file in the project directory.
 
 ## Contribution
 
