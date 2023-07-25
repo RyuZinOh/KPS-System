@@ -34,6 +34,6 @@ int main() {
             printf("Invalid Selection, please re-enter the choice.\n");
     }
 
-    getch();.
+    getch();
     return 0;
 }
