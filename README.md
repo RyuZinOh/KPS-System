@@ -21,6 +21,7 @@ To run the KPS-System on your local machine, follow these steps:
 2. Navigate to the project directory:
    ```bash
    cd KPS-System
+   cd main_program
    ```
 
 3. Compile the C program using a C compiler (e.g., gcc):
@@ -41,6 +42,7 @@ To run the KPS-System on your local machine, follow these steps:
   1. Attandance Section
   2. Accouting Section
   3. Result Section
+  4.View Student Basic Information
   4. Exit
   ```
 - Use the corresponding option number to perform the desired operation.
