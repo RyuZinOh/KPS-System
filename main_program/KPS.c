@@ -4,7 +4,7 @@
 
 void s_view();
 void s_result();
-void s_attandance();
+void s_attendance();
 void s_accounting();
 
 int main() {
@@ -15,7 +15,7 @@ int main() {
 
     switch (choice) {
         case 1:
-            s_attandance();
+            s_attendance();
             break;
         case 2:
             s_accounting();
@@ -36,4 +36,26 @@ int main() {
 
     getch();
     return 0;
+}
+
+void s_attendance() {
+    int choice_1;
+    printf("1: Add Attendance\n2: View Attendance\n3: Delete Attendance\n4: Search Attendance\n5: Exit\n");
+    printf("Selection: ");
+    scanf("%d", &choice_1);
+}
+void s_accounting() {
+    int choice_2;
+    printf("1: Add Accouting\n2: View Accounting\n3: Delete Accouting\n4: Search Accouting\n5: Exit\n");
+    printf("Selection: ");
+    scanf("%d", &choice_2);
+}
+void s_result() {
+    int choice_3;
+    printf("1: Add Result\n2: View Result\n3: Delete Result\n4: Search Result\n5: Exit\n");
+    printf("Selection: ");
+    scanf("%d", &choice_3);
+}
+void s_view() {
+  
 }
