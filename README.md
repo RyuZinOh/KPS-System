@@ -42,8 +42,8 @@ To run the KPS-System on your local machine, follow these steps:
   1. Attandance Section
   2. Accouting Section
   3. Result Section
-  4.View Student Basic Information
-  4. Exit
+  4. View Student Basic Information
+  5. Exit
   ```
 - Use the corresponding option number to perform the desired operation.
 - The student data will be stored in the corresponding `.txt` file in the project directory.

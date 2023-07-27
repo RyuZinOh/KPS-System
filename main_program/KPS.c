@@ -39,18 +39,21 @@ int main() {
 }
 
 void s_attendance() {
+    system("cls");
     int choice_1;
     printf("1: Add Attendance\n2: View Attendance\n3: Delete Attendance\n4: Search Attendance\n5: Exit\n");
     printf("Selection: ");
     scanf("%d", &choice_1);
 }
 void s_accounting() {
+    system("cls");
     int choice_2;
     printf("1: Add Accouting\n2: View Accounting\n3: Delete Accouting\n4: Search Accouting\n5: Exit\n");
     printf("Selection: ");
     scanf("%d", &choice_2);
 }
 void s_result() {
+    system("cls");
     int choice_3;
     printf("1: Add Result\n2: View Result\n3: Delete Result\n4: Search Result\n5: Exit\n");
     printf("Selection: ");
