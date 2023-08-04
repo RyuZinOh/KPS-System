@@ -2,7 +2,13 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/RyuZinOh/KPS-System)
 ![GitHub license](https://img.shields.io/github/license/RyuZinOh/KPS-System)
 ![GitHub language](https://img.shields.io/github/languages/top/RyuZinOh/KPS-System?style=for-the-badge)
-
+<table>
+  <tr>
+    <td align="center">
+      <img src="Assets/kps-logo.png" alt="kps-logo" width="150">
+    </td>
+  </tr>
+</table>
 This repository contains a simple Student Management System written in C. The program allows users to add, view, update, and delete student records. It demonstrates basic file handling operations for data storage.
 
 ## Dependencies
@@ -39,7 +45,7 @@ To run the KPS-System on your local machine, follow these steps:
 - Upon running the program, you will be presented with a menu of options:
   ```
   Student Management System Menu
-  1. Attandance Section
+  1. Attandanc e Section
   2. Accouting Section
   3. Result Section
   4. View Student Basic Information
