@@ -48,7 +48,7 @@ To run the KPS-System on your local machine, follow these steps:
 - Use the corresponding option number to perform the desired operation.
 - The student data will be stored in the corresponding `.txt` file in the project directory.
 ## Screenshots
-![SS](Assets/image.png)
+![SS](Assets/kps_pic.png)
 
 ## Contribution
 
