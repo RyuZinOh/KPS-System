@@ -9,6 +9,7 @@ void s_result();
 void s_view();
 void showLoadingScreen();
 void displayHeader();
+void Accounting_add();
 
 int main() {
     int choice;
@@ -90,7 +91,7 @@ void s_accounting() {
 
     switch (choice_2) {
         case 1:
-            printf("this module is under Safal\n");
+          Accounting_add();
             break;
         case 2:
             printf("this module is under Safal\n");
@@ -170,4 +171,19 @@ void showLoadingScreen() {
         printf(".");
     }
     printf("\n");
+}
+
+//Accounting zone By safal 
+void Accounting_add(){
+    FILE *account_;
+    char filename_a[] = "../Project_Data/accounts.txt";
+    char a_name[100];
+    account_ = fopen(filename_a, "w");
+    if(account_){
+    printf("Enter The Student Name to Add Balance : ");
+    scanf("%s",a_name);
+    fprintf(account_,"%s", a_name);
+    fclose(account_);   
+    }
+    
 }
