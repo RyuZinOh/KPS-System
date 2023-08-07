@@ -176,9 +176,8 @@ void showLoadingScreen() {
 //Accounting zone By safal 
 void Accounting_add(){
     FILE *account_;
-    char filename_a[] = "../Project_Data/accounts.txt";
     char a_name[100];
-    account_ = fopen(filename_a, "w");
+    account_ = fopen("../Project_Data/accounts.txt", "w");
     if(account_){
     printf("Enter The Student Name to Add Balance : ");
     scanf("%s",a_name);
