@@ -3,13 +3,31 @@
 #include <stdlib.h>
 #include <windows.h>
 
-void s_attendance();
-void s_accounting();
-void s_result();
-void s_view();
+//main functions
+void attendance();
+void accounting();
+void result();
+void view();
 void showLoadingScreen();
 void displayHeader();
-void Accounting_add();
+
+//kabish functions
+void a_attendance();
+void v_attendance();
+void d_attendance();
+void s_attendance(); 
+
+//pragyan functions
+void a_result();
+void v_result();
+void d_ressult();
+void s_result();
+
+//safal functions
+void a_accoutning();
+void v_accoutning();
+void d_accoutning();
+void s_accoutning();
 
 int main() {
     int choice;
@@ -24,16 +42,16 @@ int main() {
 
         switch (choice) {
             case 1:
-                s_attendance();
+                attendance();
                 break;
             case 2:
-                s_accounting();
+                accounting();
                 break;
             case 3:
-                s_result();
+                result();
                 break;
             case 4:
-                s_view();
+                view();
                 break;
             case 5:
                 printf("Exiting the program.....\n");
@@ -52,7 +70,7 @@ int main() {
     return 0;
 }
 
-void s_attendance() {
+void attendance() {
     system("cls");
     int choice_1;
 
@@ -62,16 +80,16 @@ void s_attendance() {
 
     switch (choice_1) {
         case 1:
-            printf("this module is under Kabish\n");
+            a_attendance();
             break;
         case 2:
-            printf("this module is under Kabish\n");
+            v_attendance();
             break;
         case 3:
-            printf("this module is under Kabish\n");
+            d_attendance();
             break;
         case 4:
-            printf("this module is under Kabish\n");
+            s_attendance();
             break;
         case 5:
             printf("Going back to the Main Menu.....\n");
@@ -81,7 +99,7 @@ void s_attendance() {
     }
 }
 
-void s_accounting() {
+void accounting() {
     system("cls");
     int choice_2;
 
@@ -91,16 +109,16 @@ void s_accounting() {
 
     switch (choice_2) {
         case 1:
-          Accounting_add();
+          a_accounting();
             break;
         case 2:
-            printf("this module is under Safal\n");
+            v_accounting();
             break;
         case 3:
-            printf("this module is under Safal\n");
+            d_accounting();
             break;
         case 4:
-            printf("this module is under Safal\n");
+            s_accounting();
             break;
         case 5:
             printf("Going back to the Main Menu.....\n");
@@ -110,7 +128,7 @@ void s_accounting() {
     }
 }
 
-void s_result() {
+void result() {
     system("cls");
     int choice_3;
 
@@ -120,16 +138,16 @@ void s_result() {
 
     switch (choice_3) {
         case 1:
-            printf("this module is under pragyan\n");
+            a_result();
             break;
         case 2:
-            printf("this module is under pragyan\n");
+            v_result();
             break;
         case 3:
-            printf("this module is under pragyan\n");
+            d_result();
             break;
         case 4:
-            printf("this module is under pragyan\n");
+            s_result();
             break;
         case 5:
             printf("Going back to the Main Menu.....\n");
@@ -139,7 +157,7 @@ void s_result() {
     }
 }
 
-void s_view() {
+void view() {
     system("cls");
     printf("View Student Basic Information (Under Construction)\n");
 }
@@ -173,17 +191,13 @@ void showLoadingScreen() {
     printf("\n");
 }
 
-//Accounting zone By safal 
-void Accounting_add(){
-    FILE *account_;
-    char filename_a[] = "../Project_Data/accounts.txt";
-    char a_name[100];
-    account_ = fopen(filename_a, "w");
-    if(account_){
-    printf("Enter The Student Name to Add Balance : ");
-    scanf("%s",a_name);
-    fprintf(account_,"%s", a_name);
-    fclose(account_);   
-    }
-    
-}
+
+
+
+//kabish section
+
+//pragyan section 
+
+//safql section
+
+//overall section
