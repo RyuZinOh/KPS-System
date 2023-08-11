@@ -223,7 +223,7 @@ int a_attendance(){
     scanf("%d", &n);
     // Input information for each student
     for (int i = 0; i < n; i++) {
-        printf("Person %d:\n", i + 1);
+        printf("Student %d:\n", i + 1);
         printf("Name: ");
         scanf("%s", f[i].name);
         printf("Age: ");
