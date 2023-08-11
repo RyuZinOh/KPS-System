@@ -3,7 +3,31 @@
 #include <stdlib.h>
 #include <windows.h>
 
-//main functions
+struct student {
+    char name[50];
+    char address[50];
+    char f_name[50];
+    int age;
+    char ph_no[50];
+} f[100];
+
+struct student_result {
+    int math;
+    int business;
+    int account;
+    int c;
+    int electricity;
+    int practical;
+    char grade[2];
+} g[100];
+
+struct student_balance {
+    int paid;
+    int discount;
+    int balance;
+} h[100];
+
+// Function prototypes
 void attendance();
 void accounting();
 void result();
@@ -11,23 +35,23 @@ void view();
 void showLoadingScreen();
 void displayHeader();
 
-//kabish functions
-void a_attendance();
-void v_attendance();
-void d_attendance();
-void s_attendance(); 
+// Kabish functions
+int a_attendance();
+int v_attendance();
+int d_attendance();
+int s_attendance();
 
-//pragyan functions
-void a_result();
-void v_result();
-void d_ressult();
-void s_result();
+// Pragyan functions
+int a_result();
+int v_result();
+int d_result();
+int s_result();
 
-//safal functions
-void a_accoutning();
-void v_accoutning();
-void d_accoutning();
-void s_accoutning();
+// Safal functions
+int a_accounting();
+int v_accounting();
+int d_accounting();
+int s_accounting();
 
 int main() {
     int choice;
@@ -191,13 +215,112 @@ void showLoadingScreen() {
     printf("\n");
 }
 
+//kabish functions
+int a_attendance(){
+    FILE *hero;
+    int n;
+    printf("Enter the number of students: ");
+    scanf("%d", &n);
+    // Input information for each student
+    for (int i = 0; i < n; i++) {
+        printf("Person %d:\n", i + 1);
+        printf("Name: ");
+        scanf("%s", f[i].name);
+        printf("Age: ");
+        scanf("%d", &f[i].age);
+        printf("Address: ");
+        scanf("%s", f[i].address);
+        printf("Father's Name: ");
+        scanf("%s", f[i].f_name);
+        printf("Phone Number: ");
+        scanf("%s", f[i].ph_no);
+    }
+
+    // Write information to file
+    hero = fopen("../Project_Data/attendance_cart.txt", "w");
+    if (hero == NULL) {
+        printf("File could not be opened.\n");
+        return 1; // Exit with an error code
+    }
+
+    for (int i = 0; i < n; i++) {
+        fprintf(hero, "%s %d %s %s %s\n", f[i].name, f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
+    }
+    fclose(hero);
+    return 0;
+}
+
+int v_attendance(){
+    system("cls");
+    printf("View Attendance (Under Construction)\n");
+    return 0;
+}
+
+int d_attendance(){
+    system("cls");
+    printf("Delete Attendance (Under Construction)\n");
+    return 0;
+}
+
+int s_attendance(){
+    system("cls");
+    printf("Search Attendance (Under Construction)\n");
+    return 0;
+}
+
+//pragyan functions
+int a_result() {
+    system("cls");
+    printf("Add Result (Under Construction)\n");
+    return 0;
+}
+
+int v_result() {
+    system("cls");
+    printf("View Result (Under Construction)\n");
+    return 0;
+}
+
+int d_result() {
+    system("cls");
+    printf("Delete Result (Under Construction)\n");
+    return 0;
+}
+
+int s_result() {
+    system("cls");
+    printf("Search Result (Under Construction)\n");
+    return 0;
+}
+
+//safal functions
+int a_accounting() {
+    system("cls");
+    printf("Add Accounting (Under Construction)\n");
+    return 0;
+}
+
+int v_accounting() {
+    system("cls");
+    printf("View Accounting (Under Construction)\n");
+    return 0;
+}
+
+int d_accounting() {
+    system("cls");
+    printf("Delete Accounting (Under Construction)\n");
+    return 0;
+}
+
+int s_accounting() {
+    system("cls");
+    printf("Search Accounting (Under Construction)\n");
+    return 0;
+}
 
 
 
-//kabish section
 
-//pragyan section 
 
-//safql section
 
-//overall section
+
