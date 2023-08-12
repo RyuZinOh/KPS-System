@@ -216,85 +216,7 @@ void showLoadingScreen() {
 }
 
 //kabish functions
-int a_attendance() {
-    system("cls");
-    FILE *hero;
-    int n;
-    printf("Enter the number of students: ");
-    scanf("%d", &n);
 
-    // Input information for each student
-    for (int i = 0; i < n; i++) {
-        printf("Student %d:\n", i + 1);
-        printf("Name: ");
-        scanf("%s", f[i].name);
-        printf("Age: ");
-        scanf("%d", &f[i].age);
-        printf("Address: ");
-        scanf("%s", f[i].address);
-        printf("Father's Name: ");
-        scanf("%s", f[i].f_name);
-        printf("Phone Number: ");
-        scanf("%s", f[i].ph_no);
-    }
-
-    // Write information to file
-    hero = fopen("../Project_Data/attendance_cart.txt", "a");
-    if (hero == NULL) {
-        printf("File could not be opened.\n");
-        return 1; // Exit with an error code
-    }
-
-    for (int i = 0; i < n; i++) {
-        fprintf(hero, "%s %d %s %s %s\n", f[i].name, f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
-    }
-    fclose(hero);
-
-    // Update the student count
-    FILE *countFile = fopen("../Project_Data/student_count.txt", "w");
-    if (countFile != NULL) {
-        fprintf(countFile, "%d", n);
-        fclose(countFile);
-    }
-
-    return 0;
-}
-
-int v_attendance() {
-    system("cls");
-    FILE *hero;
-    int n;
-    hero = fopen("../Project_Data/attendance_cart.txt", "r");
-    if (hero == NULL) {
-        printf("File could not be opened.\n");
-        return 1; // Exit with an error code
-    }
-
-    // Read the number of students from the count file
-    int numStudents;
-    FILE *countFile = fopen("../Project_Data/student_count.txt", "r");
-    if (countFile != NULL) {
-        fscanf(countFile, "%d", &numStudents);
-        fclose(countFile);
-    } else {
-        printf("Student count file not found.\n");
-        return 1; // Exit with an error code
-    }
-
-    for (int i = 0; i < numStudents; i++) {
-        fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
-        printf("Student %d:\n", i + 1);
-        printf("Name: %s\n", f[i].name);
-        printf("Age: %d\n", f[i].age);
-        printf("Address: %s\n", f[i].address);
-        printf("Father's Name: %s\n", f[i].f_name);
-        printf("Phone Number: %s\n", f[i].ph_no);
-        printf("\n");
-    }
-
-    fclose(hero);
-    return 0;
-}
 int a_attendance() {
     system("cls");
     FILE *hero;
@@ -361,6 +283,7 @@ int v_attendance() {
     fclose(hero);
     return 0;
 }
+
 
 int d_attendance(){
     system("cls");
