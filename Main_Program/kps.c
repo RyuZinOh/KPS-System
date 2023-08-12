@@ -218,76 +218,14 @@ void showLoadingScreen() {
 //kabish functions
 
 int a_attendance() {
-    FILE *hero;
-    int existing_n = 0;
-
-    hero = fopen("../Project_Data/attendance_cart.txt", "r");
-    if (hero != NULL) {
-        fscanf(hero, "%d", &existing_n);
-        fclose(hero);
-    }
-
-    int new_n;
-    printf("Enter the number of students to add: ");
-    scanf("%d", &new_n);
-
-    int total_n = existing_n + new_n;
-
-    hero = fopen("../Project_Data/attendance_cart.txt", "a");
-    if (hero == NULL) {
-        printf("File could not be opened.\n");
-        return 1;
-    }
-
-    fprintf(hero, "%d\n", total_n);
-
-    for (int i = existing_n; i < total_n; i++) {
-        printf("Student %d:\n", i + 1);
-        printf("Name: ");
-        scanf("%s", f[i].name);
-        printf("Age: ");
-        scanf("%d", &f[i].age);
-        printf("Address: ");
-        scanf("%s", f[i].address);
-        printf("Father's Name: ");
-        scanf("%s", f[i].f_name);
-        printf("Phone Number: ");
-        scanf("%s", f[i].ph_no);
-
-        fprintf(hero, "%s %d %s %s %s\n", f[i].name, f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
-    }
-
-    fclose(hero);
+    system("cls");
+    printf("Add attendance (under construction)\n");
     return 0;
 }
 
 int v_attendance() {
     system("cls");
-
-    FILE *hero;
-    int total_n;
-
-    hero = fopen("../Project_Data/attendance_cart.txt", "r");
-    if (hero == NULL) {
-        printf("File could not be opened.\n");
-        return 1;
-    }
-
-    fscanf(hero, "%d", &total_n);
-    fgetc(hero); // Consume the newline character
-
-    for (int i = 0; i < total_n; i++) {
-        fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
-        printf("Student %d:\n", i + 1);
-        printf("Name: %s\n", f[i].name);
-        printf("Age: %d\n", f[i].age);
-        printf("Address: %s\n", f[i].address);
-        printf("Father's Name: %s\n", f[i].f_name);
-        printf("Phone Number: %s\n", f[i].ph_no);
-        printf("____________________________________\n");
-    }
-
-    fclose(hero);
+    printf("View attendance (under construction)\n");
     return 0;
 }
 
