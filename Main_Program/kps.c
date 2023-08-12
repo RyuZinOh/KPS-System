@@ -238,7 +238,7 @@ int a_attendance(){
     }
 
     // Write information to file
-    hero = fopen("../Project_Data/attendance_cart.txt", "w");
+    hero = fopen("../Project_Data/attendance_cart.txt", "a");
     if (hero == NULL) {
         printf("File could not be opened.\n");
         return 1; // Exit with an error code
@@ -255,28 +255,25 @@ int v_attendance() {
     system("cls");
     FILE *hero;
     int n;
-    hero = fopen("../Project_Data/attendance_cart.txt", "r"); // Corrected file path
-    
+    hero = fopen("../Project_Data/attendance_cart.txt", "r");
     if (hero == NULL) {
-        printf("File could not be opened.\n");
-        return 1; // Exit with an error code
-    }
-
+    printf("File could not be opened.\n");
+    return 1; // Exit with an error code
+   }
     fscanf(hero, "%d", &n); // Read the number of students from the file
 
-    for (int i = 0; i < n; i++) {
-        fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
-        printf("Student %d:\n", i + 1);
-        printf("Name: %s\n", f[i].name);
-        printf("Age: %d\n", f[i].age);
-        printf("Address: %s\n", f[i].address);
-        printf("Father's Name: %s\n", f[i].f_name);
-        printf("Phone Number: %s\n", f[i].ph_no);
-        printf("\n");
-    }
-
-    fclose(hero);
-    return 0;
+  for (int i = 0; i < n; i++) {
+      fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
+      printf("Student %d:\n", i + 1);
+      printf("Name: %s\n", f[i].name);
+      printf("Age: %d\n", f[i].age);
+      printf("Address: %s\n", f[i].address);
+      printf("Father's Name: %s\n", f[i].f_name);
+      printf("Phone Number: %s\n", f[i].ph_no);
+      printf("____________________________________\n");
+}
+  fclose(hero);
+  return 0;
 }
 
 
