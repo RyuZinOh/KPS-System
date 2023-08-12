@@ -216,6 +216,7 @@ void showLoadingScreen() {
 }
 
 //kabish functions
+
 int a_attendance() {
     FILE *hero;
     int existing_n = 0;
@@ -232,7 +233,7 @@ int a_attendance() {
 
     int total_n = existing_n + new_n;
 
-    hero = fopen("../Project_Data/attendance_cart.txt", "w");
+    hero = fopen("../Project_Data/attendance_cart.txt", "a");
     if (hero == NULL) {
         printf("File could not be opened.\n");
         return 1;
@@ -240,16 +241,8 @@ int a_attendance() {
 
     fprintf(hero, "%d\n", total_n);
 
-    if (existing_n > 0) {
-        char line[100];
-        for (int i = 0; i < existing_n; i++) {
-            fgets(line, sizeof(line), hero);
-            fprintf(hero, "%s", line);
-        }
-    }
-
-    for (int i = 0; i < new_n; i++) {
-        printf("Student %d:\n", existing_n + i + 1);
+    for (int i = existing_n; i < total_n; i++) {
+        printf("Student %d:\n", i + 1);
         printf("Name: ");
         scanf("%s", f[i].name);
         printf("Age: ");
@@ -270,16 +263,20 @@ int a_attendance() {
 
 int v_attendance() {
     system("cls");
+
     FILE *hero;
-    int n;
+    int total_n;
+
     hero = fopen("../Project_Data/attendance_cart.txt", "r");
     if (hero == NULL) {
         printf("File could not be opened.\n");
         return 1;
     }
-    fscanf(hero, "%d", &n);
 
-    for (int i = 0; i < n; i++) {
+    fscanf(hero, "%d", &total_n);
+    fgetc(hero); // Consume the newline character
+
+    for (int i = 0; i < total_n; i++) {
         fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
         printf("Student %d:\n", i + 1);
         printf("Name: %s\n", f[i].name);
@@ -289,6 +286,7 @@ int v_attendance() {
         printf("Phone Number: %s\n", f[i].ph_no);
         printf("____________________________________\n");
     }
+
     fclose(hero);
     return 0;
 }
