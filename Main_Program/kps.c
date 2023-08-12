@@ -217,11 +217,9 @@ void showLoadingScreen() {
 
 //kabish functions
 int a_attendance() {
-    system("cls");
     FILE *hero;
-    int existing_n = 0; // To store the existing number of students
+    int existing_n = 0;
 
-    // Read the existing number of students from the file
     hero = fopen("../Project_Data/attendance_cart.txt", "r");
     if (hero != NULL) {
         fscanf(hero, "%d", &existing_n);
@@ -232,26 +230,24 @@ int a_attendance() {
     printf("Enter the number of students to add: ");
     scanf("%d", &new_n);
 
-    // Update the total number of students
     int total_n = existing_n + new_n;
 
-    // Open the file for writing and update the total number
     hero = fopen("../Project_Data/attendance_cart.txt", "w");
     if (hero == NULL) {
         printf("File could not be opened.\n");
-        return 1; // Exit with an error code
+        return 1;
     }
 
     fprintf(hero, "%d\n", total_n);
 
-    // Append the existing records back to the file
-    for (int i = 0; i < existing_n; i++) {
+    if (existing_n > 0) {
         char line[100];
-        fgets(line, sizeof(line), hero); // Read and discard the existing record
-        fprintf(hero, "%s", line);
+        for (int i = 0; i < existing_n; i++) {
+            fgets(line, sizeof(line), hero);
+            fprintf(hero, "%s", line);
+        }
     }
 
-    // Input information for each new student
     for (int i = 0; i < new_n; i++) {
         printf("Student %d:\n", existing_n + i + 1);
         printf("Name: ");
@@ -265,7 +261,6 @@ int a_attendance() {
         printf("Phone Number: ");
         scanf("%s", f[i].ph_no);
 
-        // Write the new student information to the file
         fprintf(hero, "%s %d %s %s %s\n", f[i].name, f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
     }
 
@@ -273,31 +268,34 @@ int a_attendance() {
     return 0;
 }
 
-
 int v_attendance() {
     system("cls");
     FILE *hero;
     int n;
     hero = fopen("../Project_Data/attendance_cart.txt", "r");
     if (hero == NULL) {
-    printf("File could not be opened.\n");
-    return 1; // Exit with an error code
-   }
-    fscanf(hero, "%d", &n); // Read the number of students from the file
+        printf("File could not be opened.\n");
+        return 1;
+    }
+    fscanf(hero, "%d", &n);
 
-  for (int i = 0; i < n; i++) {
-      fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
-      printf("Student %d:\n", i + 1);
-      printf("Name: %s\n", f[i].name);
-      printf("Age: %d\n", f[i].age);
-      printf("Address: %s\n", f[i].address);
-      printf("Father's Name: %s\n", f[i].f_name);
-      printf("Phone Number: %s\n", f[i].ph_no);
-      printf("____________________________________\n");
+    for (int i = 0; i < n; i++) {
+        fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
+        printf("Student %d:\n", i + 1);
+        printf("Name: %s\n", f[i].name);
+        printf("Age: %d\n", f[i].age);
+        printf("Address: %s\n", f[i].address);
+        printf("Father's Name: %s\n", f[i].f_name);
+        printf("Phone Number: %s\n", f[i].ph_no);
+        printf("____________________________________\n");
+    }
+    fclose(hero);
+    return 0;
 }
-  fclose(hero);
-  return 0;
-}
+
+
+
+
 
 
 int d_attendance(){
