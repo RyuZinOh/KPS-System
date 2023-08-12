@@ -220,9 +220,18 @@ void showLoadingScreen() {
 int a_attendance() {
     system("cls");
     FILE *hero;
-    int n;
-    printf("Enter the number of students: ");
-    scanf("%d", &n);
+    int existing_n = 0; // To store the existing number of students
+    int new_n; // To store the number of new students being added
+
+    // Read the existing number of students from the file
+    hero = fopen("../Project_Data/attendance_cart.txt", "r");
+    if (hero != NULL) {
+        fscanf(hero, "%d", &existing_n);
+        fclose(hero);
+    }
+
+    printf("Enter the number of new students to add: ");
+    scanf("%d", &new_n);
 
     // Open the file in append mode
     hero = fopen("../Project_Data/attendance_cart.txt", "a");
@@ -231,12 +240,12 @@ int a_attendance() {
         return 1; // Exit with an error code
     }
 
-    // Write the number of students as a marker
-    fprintf(hero, "%d\n", n);
+    // Write the new attendance records without overwriting existing data
+    fprintf(hero, "%d\n", existing_n + new_n); // Update the total number of students
 
-    // Input information for each student
-    for (int i = 0; i < n; i++) {
-        printf("Student %d:\n", i + 1);
+    // Input information for each new student
+    for (int i = 0; i < new_n; i++) {
+        printf("Student %d:\n", existing_n + i + 1);
         printf("Name: ");
         scanf("%s", f[i].name);
         printf("Age: ");
@@ -248,7 +257,7 @@ int a_attendance() {
         printf("Phone Number: ");
         scanf("%s", f[i].ph_no);
 
-        // Write student information to the file
+        // Write new student information to the file
         fprintf(hero, "%s %d %s %s %s\n", f[i].name, f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
     }
 
@@ -259,17 +268,18 @@ int a_attendance() {
 int v_attendance() {
     system("cls");
     FILE *hero;
-    int n;
+    int total_n; // To store the total number of students
+
     hero = fopen("../Project_Data/attendance_cart.txt", "r");
     if (hero == NULL) {
         printf("File could not be opened.\n");
         return 1; // Exit with an error code
     }
 
-    // Read and discard the marker (number of students)
-    fscanf(hero, "%d", &n);
+    // Read the total number of students from the file
+    fscanf(hero, "%d", &total_n);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < total_n; i++) {
         fscanf(hero, "%s %d %s %s %s", f[i].name, &f[i].age, f[i].address, f[i].f_name, f[i].ph_no);
         printf("Student %d:\n", i + 1);
         printf("Name: %s\n", f[i].name);
