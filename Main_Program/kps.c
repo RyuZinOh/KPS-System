@@ -1,189 +1,61 @@
-#include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 
-struct student {
+// Data structures
+struct Student {
     char name[50];
     char address[50];
     char f_name[50];
     int age;
     char ph_no[50];
-} f[100];
+};
 
-struct student_result {
+struct StudentResult {
     int math;
     int business;
     int account;
     int c;
     int electricity;
     int practical;
-    char grade[2];
-} g[100];
+    char grade[3]; // Make space for null terminator
+};
 
-struct student_balance {
+struct StudentBalance {
     int paid;
     int discount;
     int balance;
-} h[100];
+};
 
 // Function prototypes
-void attendance();
-void accounting();
-void result();
-void view();
-void showLoadingScreen();
 void displayHeader();
+void menu();
 
-// Kabish functions
-int a_attendance();
-int v_attendance();
-int d_attendance();
-int s_attendance();
+// Individual section functions
+void manageAttendance();
+void manageAccounting();
+void manageResults();
+void viewBasicInfo();
 
-// Pragyan functions
-int a_result();
-int v_result();
-int d_result();
-int s_result();
+// Functions for each action within sections
+void addAttendance();
+void viewAttendance();
+void deleteAttendance();
+void searchAttendance();
 
-// Safal functions
-int a_accounting();
-int v_accounting();
-int d_accounting();
-int s_accounting();
+void addAccounting();
+void viewAccounting();
+void deleteAccounting();
+void searchAccounting();
+
+void addResult();
+void viewResult();
+void deleteResult();
+void searchResult();
 
 int main() {
-    int choice;
-    showLoadingScreen();
-    do {
-        system("cls");
-        displayHeader();
-
-        printf("\nStudent Management System Menu\n1: Attendance Section\n2: Accounting Section\n3: Result Section\n4: View Student Basic Information\n5: Exit\n");
-        printf("Enter Choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                attendance();
-                break;
-            case 2:
-                accounting();
-                break;
-            case 3:
-                result();
-                break;
-            case 4:
-                view();
-                break;
-            case 5:
-                printf("Exiting the program.....\n");
-                break;
-            default:
-                printf("Invalid Selection, please re-enter the choice.\n");
-        }
-
-        if (choice != 5) {
-            printf("Press any key to continue...\n");
-            getch(); // Wait for user input before clearing the screen
-        }
-
-    } while (choice != 5);
-
+    displayHeader();
+    menu();
     return 0;
-}
-
-void attendance() {
-    system("cls");
-    int choice_1;
-
-    printf("1: Add Attendance\n2: View Attendance\n3: Delete Attendance\n4: Search Attendance\n5: Back to Main Menu\n");
-    printf("Selection: ");
-    scanf("%d", &choice_1);
-
-    switch (choice_1) {
-        case 1:
-            a_attendance();
-            break;
-        case 2:
-            v_attendance();
-            break;
-        case 3:
-            d_attendance();
-            break;
-        case 4:
-            s_attendance();
-            break;
-        case 5:
-            printf("Going back to the Main Menu.....\n");
-            break;
-        default:
-            printf("Invalid Selection, please re-enter the choice.\n");
-    }
-}
-
-void accounting() {
-    system("cls");
-    int choice_2;
-
-    printf("1: Add Accounting\n2: View Accounting\n3: Delete Accounting\n4: Search Accounting\n5: Back to Main Menu\n");
-    printf("Selection: ");
-    scanf("%d", &choice_2);
-
-    switch (choice_2) {
-        case 1:
-          a_accounting();
-            break;
-        case 2:
-            v_accounting();
-            break;
-        case 3:
-            d_accounting();
-            break;
-        case 4:
-            s_accounting();
-            break;
-        case 5:
-            printf("Going back to the Main Menu.....\n");
-            break;
-        default:
-            printf("Invalid Selection, please re-enter the choice.\n");
-    }
-}
-
-void result() {
-    system("cls");
-    int choice_3;
-
-    printf("1: Add Result\n2: View Result\n3: Delete Result\n4: Search Result\n5: Back to Main Menu\n");
-    printf("Selection: ");
-    scanf("%d", &choice_3);
-
-    switch (choice_3) {
-        case 1:
-            a_result();
-            break;
-        case 2:
-            v_result();
-            break;
-        case 3:
-            d_result();
-            break;
-        case 4:
-            s_result();
-            break;
-        case 5:
-            printf("Going back to the Main Menu.....\n");
-            break;
-        default:
-            printf("Invalid Selection, please re-enter the choice.\n");
-    }
-}
-
-void view() {
-    system("cls");
-    printf("View Student Basic Information (Under Construction)\n");
 }
 
 void displayHeader() {
@@ -206,99 +78,246 @@ void displayHeader() {
     fclose(headerFile);
 }
 
-void showLoadingScreen() {
-    printf("Loading ");
-    for (int i = 0; i < 3; i++) {
-        Sleep(1000); // Wait for 1 second (Windows)
-        printf(".");
-    }
-    printf("\n");
+void menu() {
+    int choice;
+    do {
+        printf("\nStudent Management System Menu\n"
+               "1: Attendance Section\n"
+               "2: Accounting Section\n"
+               "3: Result Section\n"
+               "4: View Student Basic Information\n"
+               "5: Exit\n"
+               "Enter Choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                system("cls");
+                manageAttendance();
+                break;
+            case 2:
+                system("cls");
+                manageAccounting();
+                break;
+            case 3:
+                system("cls");
+                manageResults();
+                break;
+            case 4:
+                system("cls");
+                viewBasicInfo();
+                break;
+            case 5:
+                system("cls");
+                printf("Exiting the program.....\n");
+                break;
+            default:
+                system("cls");
+                printf("Invalid Selection, please re-enter the choice.\n");
+        }
+
+        if (choice != 5) {
+            printf("Press Enter to continue...\n");
+            getchar(); // Consume newline
+            getchar(); // Wait for user input before clearing the screen
+            system("cls");
+        }
+
+    } while (choice != 5);
 }
 
-//kabish functions
+void manageAttendance() {
+    int choice;
+    do {
+        printf("Attendance Section\n"
+               "1: Add Attendance\n"
+               "2: View Attendance\n"
+               "3: Delete Attendance\n"
+               "4: Search Attendance\n"
+               "5: Back to Main Menu\n"
+               "Selection: ");
+        scanf("%d", &choice);
 
-int a_attendance() {
-    system("cls");
+        switch (choice) {
+            case 1:
+                system("cls");
+                addAttendance();
+                break;
+            case 2:
+                system("cls");
+                viewAttendance();
+                break;
+            case 3:
+                system("cls");
+                deleteAttendance();
+                break;
+            case 4:
+                system("cls");
+                searchAttendance();
+                break;
+            case 5:
+                system("cls");
+                printf("Going back to the Main Menu.....\n");
+                break;
+            default:
+                system("cls");
+                printf("Invalid Selection, please re-enter the choice.\n");
+        }
+
+        if (choice != 5) {
+            printf("Press Enter to continue...\n");
+            getchar(); // Consume newline
+            getchar(); // Wait for user input before clearing the screen
+            system("cls");
+        }
+
+    } while (choice != 5);
+}
+
+void addAttendance() {
     printf("Add attendance (under construction)\n");
-    return 0;
 }
 
-int v_attendance() {
-    system("cls");
+void viewAttendance() {
     printf("View attendance (under construction)\n");
-    return 0;
 }
 
-
-
-
-
-
-int d_attendance(){
-    system("cls");
+void deleteAttendance() {
     printf("Delete Attendance (Under Construction)\n");
-    return 0;
 }
 
-int s_attendance(){
-    system("cls");
+void searchAttendance() {
     printf("Search Attendance (Under Construction)\n");
-    return 0;
 }
 
-//pragyan functions
-int a_result() {
-    system("cls");
-    printf("Add Result (Under Construction)\n");
-    return 0;
+void manageAccounting() {
+    int choice;
+    do {
+        printf("Accounting Section\n"
+               "1: Add Accounting\n"
+               "2: View Accounting\n"
+               "3: Delete Accounting\n"
+               "4: Search Accounting\n"
+               "5: Back to Main Menu\n"
+               "Selection: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                system("cls");
+                addAccounting();
+                break;
+            case 2:
+                system("cls");
+                viewAccounting();
+                break;
+            case 3:
+                system("cls");
+                deleteAccounting();
+                break;
+            case 4:
+                system("cls");
+                searchAccounting();
+                break;
+            case 5:
+                system("cls");
+                printf("Going back to the Main Menu.....\n");
+                break;
+            default:
+                system("cls");
+                printf("Invalid Selection, please re-enter the choice.\n");
+        }
+
+        if (choice != 5) {
+            printf("Press Enter to continue...\n");
+            getchar(); // Consume newline
+            getchar(); // Wait for user input before clearing the screen
+            system("cls");
+        }
+
+    } while (choice != 5);
 }
 
-int v_result() {
-    system("cls");
-    printf("View Result (Under Construction)\n");
-    return 0;
-}
-
-int d_result() {
-    system("cls");
-    printf("Delete Result (Under Construction)\n");
-    return 0;
-}
-
-int s_result() {
-    system("cls");
-    printf("Search Result (Under Construction)\n");
-    return 0;
-}
-
-//safal functions
-int a_accounting() {
-    system("cls");
+void addAccounting() {
     printf("Add Accounting (Under Construction)\n");
-    return 0;
 }
 
-int v_accounting() {
-    system("cls");
+void viewAccounting() {
     printf("View Accounting (Under Construction)\n");
-    return 0;
 }
 
-int d_accounting() {
-    system("cls");
+void deleteAccounting() {
     printf("Delete Accounting (Under Construction)\n");
-    return 0;
 }
 
-int s_accounting() {
-    system("cls");
+void searchAccounting() {
     printf("Search Accounting (Under Construction)\n");
-    return 0;
 }
 
+void manageResults() {
+    int choice;
+    do {
+        printf("Result Section\n"
+               "1: Add Result\n"
+               "2: View Result\n"
+               "3: Delete Result\n"
+               "4: Search Result\n"
+               "5: Back to Main Menu\n"
+               "Selection: ");
+        scanf("%d", &choice);
 
+        switch (choice) {
+            case 1:
+                system("cls");
+                addResult();
+                break;
+            case 2:
+                system("cls");
+                viewResult();
+                break;
+            case 3:
+                system("cls");
+                deleteResult();
+                break;
+            case 4:
+                system("cls");
+                searchResult();
+                break;
+            case 5:
+                system("cls");
+                printf("Going back to the Main Menu.....\n");
+                break;
+            default:
+                system("cls");
+                printf("Invalid Selection, please re-enter the choice.\n");
+        }
 
+        if (choice != 5) {
+            printf("Press Enter to continue...\n");
+            getchar(); // Consume newline
+            getchar(); // Wait for user input before clearing the screen
+            system("cls");
+        }
 
+    } while (choice != 5);
+}
 
+void addResult() {
+    printf("Add Result (Under Construction)\n");
+}
 
+void viewResult() {
+    printf("View Result (Under Construction)\n");
+}
 
+void deleteResult() {
+    printf("Delete Result (Under Construction)\n");
+}
+
+void searchResult() {
+    printf("Search Result (Under Construction)\n");
+}
+
+void viewBasicInfo() {
+    printf("View Student Basic Information (Under Construction)\n");
+}
