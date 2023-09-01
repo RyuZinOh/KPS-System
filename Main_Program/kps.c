@@ -247,6 +247,7 @@ void viewAccounting() {
 }
 
 void deleteAccounting() {
+printf("linter test");
     printf("Delete Accounting (Under Construction)\n");
 }
 
