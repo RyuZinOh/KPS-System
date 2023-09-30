@@ -51,7 +51,7 @@ bool isStudentIdUniqueInFile(int id) {
     return true; // ID is unique in the file
 }
 
-// Function to add a student
+// Student section
 void addStudent() {
     if (studentCount < MAX_STUDENTS) {
         struct Student newStudent;
@@ -102,8 +102,6 @@ void addStudent() {
         printf("Error: Maximum number of students reached.\n");
     }
 }
-
-// Function to view a student by name
 void viewStudentByName() {
     char searchName[50];
     printf("Enter student name to search: ");
@@ -152,8 +150,6 @@ void viewStudentByName() {
     while (getchar() != '\n');  // Clear input buffer
     getchar();  // Wait for Enter
 }
-
-// Function to delete a student by ID
 void deleteStudentById() {
     int deleteId;
     printf("Enter student ID to delete: ");
@@ -215,7 +211,6 @@ void deleteStudentById() {
     while (getchar() != '\n');  // Clear input buffer
     getchar();  // Wait for Enter
 }
-
 void editStudentById() {
     int editId;
     printf("Enter student ID to edit: ");
@@ -293,8 +288,6 @@ void editStudentById() {
     while (getchar() != '\n');  // Clear input buffer
     getchar();  // Wait for Enter
 }
-
-
 bool isStudentIdUniqueInAccountFile(int studentId) {
     // Check if the student ID exists in the account.txt file
     FILE *accountFile = fopen("Storage/account.txt", "r");
@@ -311,6 +304,7 @@ bool isStudentIdUniqueInAccountFile(int studentId) {
     return true; // Student ID is unique
 }
 
+//Accounting section
 void addAccount() {
     struct Account newAccount;
 
@@ -366,7 +360,6 @@ void addAccount() {
         printf("Error: Unable to open account file for writing.\n");
     }
 }
-
 void viewAccount() {
     printf("\033[1;32m"); // Set text color to green
     printf("View Account\n");
@@ -444,7 +437,6 @@ void viewAccount() {
     while (getchar() != '\n'); // Clear input buffer
     getchar(); // Wait for Enter
 }
-
 void deleteAccount() {
     printf("\033[1;32m"); // Set text color to green
     printf("Delete Account\n");
@@ -505,7 +497,6 @@ void deleteAccount() {
     while (getchar() != '\n'); // Clear input buffer
     getchar(); // Wait for Enter
 }
-
 void editAccount() {
     printf("\033[1;32m"); // Set text color to green
     printf("Edit Account\n");
@@ -570,7 +561,6 @@ void editAccount() {
     while (getchar() != '\n'); // Clear input buffer
     getchar(); // Wait for Enter
 }
-
 void updateAccount() {
     printf("\033[1;32m"); // Set text color to green
     printf("Update Account\n");
@@ -636,6 +626,7 @@ void updateAccount() {
     getchar(); // Wait for Enter
 }
 
+//result section
 void addResult() {
     printf("\033[1;32m"); // Set text color to green
     printf("Add Result\n");
@@ -801,9 +792,6 @@ void addResult() {
     while (getchar() != '\n'); // Clear input buffer
     getchar(); // Wait for Enter
 }
-
-
-
 void viewResult() {
     printf("View Result\n");
 
@@ -879,7 +867,6 @@ void viewResult() {
     while (getchar() != '\n'); // Clear input buffer
     getchar(); // Wait for Enter
 }
-
 void editResult() {
     printf("Edit Result\n");
 
@@ -1001,7 +988,6 @@ void editResult() {
     while (getchar() != '\n'); // Clear input buffer
     getchar(); // Wait for Enter
 }
-
 void deleteResult() {
     printf("Delete Result\n");
 
@@ -1082,6 +1068,199 @@ void deleteResult() {
     getchar(); // Wait for Enter
 }
 
+//Information section
+void clearResultData() {
+    printf("\033[1;33m"); // Set text color to yellow
+    printf("Warning: This will clear all result data. Are you sure you want to proceed? (Y/N): ");
+    printf("\033[0m"); // Reset text color
+
+    char choice;
+    scanf(" %c", &choice);
+
+    if (choice == 'Y' || choice == 'y') {
+        // Open the result file in write mode to clear its contents
+        FILE *resultFile = fopen("Storage/result.txt", "w");
+
+        if (resultFile != NULL) {
+            fclose(resultFile);
+            printf("\033[1;32m"); // Set text color to green
+            printf("Result data cleared successfully.\n");
+            printf("\033[0m"); // Reset text color
+        } else {
+            printf("\033[1;31m"); // Set text color to red
+            printf("Error: Unable to open result file for clearing data.\n");
+            printf("\033[0m"); // Reset text color
+        }
+    } else {
+        printf("\033[1;33m"); // Set text color to yellow
+        printf("Clearing result data canceled.\n");
+        printf("\033[0m"); // Reset text color
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+void clearAccountData() {
+    printf("\033[1;33m"); // Set text color to yellow
+    printf("Warning: This action will clear all account data. Do you want to continue? (yes/no): ");
+    printf("\033[0m"); // Reset text color
+
+    char response[10];
+    scanf("%9s", response);
+
+    if (strcmp(response, "yes") == 0 || strcmp(response, "Yes") == 0 || strcmp(response, "YES") == 0) {
+        // User confirmed to clear the account data
+        FILE *accountFile = fopen("Storage/account.txt", "w");
+        if (accountFile != NULL) {
+            fclose(accountFile);
+            printf("\033[1;32m"); // Set text color to green
+            printf("Account data cleared successfully.\n");
+            printf("\033[0m"); // Reset text color
+        } else {
+            printf("\033[1;31m"); // Set text color to red
+            printf("Error: Unable to open account file for writing.\n");
+            printf("\033[0m"); // Reset text color
+        }
+    } else {
+        printf("\033[1;33m"); // Set text color to yellow
+        printf("Clearing account data canceled.\n");
+        printf("\033[0m"); // Reset text color
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+int compareIntegers(const void *a, const void *b) {
+    const int *intA = (const int *)a;
+    const int *intB = (const int *)b;
+    return *intA - *intB;
+}
+void viewAllStudents() {
+    printf("\033[1;32m"); // Set text color to green
+    printf("View All Students\n");
+    printf("\033[0m"); // Reset text color
+
+    // Open the student.txt file for reading
+    FILE *file = fopen("Storage/student.txt", "r");
+
+    if (file != NULL) {
+        struct Student student; // Temporary variable to store student data while reading
+
+        // Read data from the file and store it in the students array
+        while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            students[studentCount++] = student; // Add the student data to the array
+        }
+
+        fclose(file); // Close the file
+
+        // Sort the students array by ID in ascending order
+        qsort(students, studentCount, sizeof(struct Student), compareIntegers);
+
+        // Display the sorted student information
+        printf("\033[1;32m"); // Set text color to green
+        printf("%-20s%-20s%-20s%-20s%-10s\n", "Name", "Father's Name", "Phone Number", "Faculty", "ID");
+        printf("\033[0m"); // Reset text color
+
+        for (int i = 0; i < studentCount; i++) {
+            printf("%-20s%-20s%-20s%-20s%-10d\n", students[i].name, students[i].fatherName, students[i].phoneNumber, students[i].faculty, students[i].id);
+        }
+    } else {
+        printf("Error: Unable to open file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+void deleteStudentData() {
+    printf("\033[1;33m"); // Set text color to yellow
+    printf("Warning: This will clear all student data. Are you sure you want to proceed? (Y/N): ");
+    printf("\033[0m"); // Reset text color
+
+    char choice;
+    scanf(" %c", &choice);
+
+    if (choice == 'Y' || choice == 'y') {
+        // Open the student.txt file for writing (clears its contents)
+        FILE *file = fopen("Storage/student.txt", "w");
+
+        if (file != NULL) {
+            fclose(file);
+            printf("\033[1;32m"); // Set text color to green
+            printf("Student data cleared successfully.\n");
+            printf("\033[0m"); // Reset text color
+        } else {
+            printf("\033[1;31m"); // Set text color to red
+            printf("Error: Unable to open file for clearing student data.\n");
+            printf("\033[0m"); // Reset text color
+        }
+    } else {
+        printf("\033[1;33m"); // Set text color to yellow
+        printf("Clearing student data canceled.\n");
+        printf("\033[0m"); // Reset text color
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+void infoSeparation() {
+    printf("\033[1;32m"); // Set text color to green
+    printf("Information Separation\n");
+    printf("\033[0m"); // Reset text color
+
+    char faculty[50]; // Store faculty name entered by the user
+    int studentCount = 0; // Count of students with the specified faculty
+
+    printf("Enter faculty name: ");
+    scanf(" %[^\n]s", faculty); // Read faculty name with spaces
+
+    // Open the student.txt file for reading
+    FILE *file = fopen("Storage/student.txt", "r");
+
+    if (file != NULL) {
+        struct Student student; // Temporary variable to store student data while reading
+
+        // Read data from the file and check faculty
+        while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            if (strcmp(student.faculty, faculty) == 0) {
+                printf("Name: %s\n", student.name);
+                studentCount++;
+            }
+        }
+
+        fclose(file); // Close the file
+
+        if (studentCount > 0) {
+            printf("\033[1;32m"); // Set text color to green
+            printf("Total students with faculty '%s': %d\n", faculty, studentCount);
+            printf("\033[0m"); // Reset text color
+        } else {
+            printf("\033[1;31m"); // Set text color to red
+            printf("No students found with faculty '%s'.\n", faculty);
+            printf("\033[0m"); // Reset text color
+        }
+    } else {
+        printf("\033[1;31m"); // Set text color to red
+        printf("Error: Unable to open file for reading.\n");
+        printf("\033[0m"); // Reset text color
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+
+
+//handling section
 void handleStudent() {
     printf("\033[1;32m"); // Set text color to green
     printf("KPS-system\n");
@@ -1126,7 +1305,6 @@ void handleStudent() {
         }
     }
 }
-
 void handleAccount() {
     printf("\033[1;32m"); // Set text color to green
     printf("Account Menu\n");
@@ -1175,7 +1353,6 @@ void handleAccount() {
         }
     }
 }
-
 void handleResult() {
     printf("\033[1;32m"); // Set text color to green
     printf("Result Menu\n");
@@ -1220,14 +1397,95 @@ void handleResult() {
         }
     }
 }
-
-
 void handleInformation() {
-    printf("Handling Information Section\n");
-    // Call the information program from Programs folder
-    system("./Programs/information");
+    printf("\033[1;32m"); // Set text color to green
+    printf("Information Menu\n");
+    printf("\033[0m"); // Reset text color
+
+    int choice;
+
+    while (1) {
+        printf("\033[2J\033[H"); // Clear screen
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("Information Menu\n");
+        printf("\033[0m"); // Reset text color
+
+        printf("1. View All Information\n");
+        printf("2. Delete Student Data\n");
+        printf("3. Clear Result Data\n");
+        printf("4. Clear Account Data\n");
+        printf("5. Information Separation\n"); // Option for information separation
+        printf("6. Back to Main Menu\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                viewAllStudents();
+                break;
+            case 2:
+                deleteStudentData();
+                break;
+            case 3:
+                clearResultData();
+                break;
+            case 4:
+                clearAccountData();
+                break;
+            case 5:
+                infoSeparation(); 
+                break;
+            case 6:
+                return; // Return to the main menu
+            default:
+                printf("\033[1;31m"); // Set text color to red
+                printf("Invalid choice. Please select a valid option.\n");
+                printf("\033[0m"); // Reset text color
+        }
+    }
 }
 
+
+//help section 
+// Function to display detailed help and tips
+void showHelp() {
+    printf("\nHelp - Tips and Tricks\n");
+
+    printf("\n1. Student Information:\n");
+    printf("- In the Student Information section, you can manage student data.\n");
+    printf("- You can add new student records, view all students' information, and delete all student data if needed.\n");
+    printf("- To add a new student, select '1' from the main menu and follow the prompts.\n");
+    printf("- To view all students' information, select '1' and then '1' again.\n");
+    printf("- To delete all student data, select '1' and then '3'. This action is irreversible.\n");
+
+    printf("\n2. Account:\n");
+    printf("- In the Account section, you can manage user accounts.\n");
+    printf("- You can clear all account data if needed, which will remove all user accounts.\n");
+    printf("- To clear account data, select '2' from the main menu and then confirm by typing 'yes'.\n");
+    printf("- Be cautious when clearing account data, as it cannot be undone.\n");
+
+    printf("\n3. Result Management:\n");
+    printf("- In the Result Management section, you can manage student results.\n");
+    printf("- You can add, view, edit, or delete student results.\n");
+    printf("- To add a new result, select '3' from the main menu and follow the prompts.\n");
+    printf("- To view a student's result, select '3' and then '2' and enter the student's ID.\n");
+    printf("- To edit a student's result, select '3' and then '3' and enter the student's ID.\n");
+    printf("- To delete a student's result, select '3' and then '4' and enter the student's ID.\n");
+    printf("- You can also clear all result data by selecting '3' and then '5'. This action is irreversible.\n");
+
+    printf("\n4. Help:\n");
+    printf("- You are here! This menu provides tips and tricks for using the program.\n");
+
+    printf("\n5. Exit:\n");
+    printf("- Use this option to exit the program.\n");
+    
+    printf("\nPress Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+//main function
 int main() {
     int choice;
 
@@ -1243,7 +1501,8 @@ int main() {
         printf("2. Account\n");
         printf("3. Result\n");
         printf("4. Information\n");
-        printf("5. Exit\n");
+        printf("5. Help\n"); // Added "Help" option
+        printf("6. Exit\n"); // Replaced the old "5. Exit" with "6. Exit"
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -1261,6 +1520,9 @@ int main() {
                 handleInformation();
                 break;
             case 5:
+                showHelp();
+                break;
+            case 6:
                 printf("Exiting program.\n");
                 exit(0);
             default:
