@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #ifdef _WIN32
 #define CLEAR_SCREEN "cls"
@@ -294,6 +295,21 @@ void editStudentById() {
 }
 
 
+bool isStudentIdUniqueInAccountFile(int studentId) {
+    // Check if the student ID exists in the account.txt file
+    FILE *accountFile = fopen("Storage/account.txt", "r");
+    if (accountFile != NULL) {
+        struct Account account;
+        while (fscanf(accountFile, "%d %lf %lf\n", &account.studentId, &account.feeAmount, &account.feePaid) == 3) {
+            if (account.studentId == studentId) {
+                fclose(accountFile);
+                return false; // Student ID already exists in the account.txt file
+            }
+        }
+        fclose(accountFile);
+    }
+    return true; // Student ID is unique
+}
 
 void addAccount() {
     struct Account newAccount;
@@ -316,8 +332,18 @@ void addAccount() {
             printf("\033[1;31m"); // Set text color to red
             printf("Error: Student ID does not exist. Please enter a valid ID.\n");
             printf("\033[0m"); // Reset text color
+            sleep(2); // Pause for 2 seconds to display the error message
         }
     } while (!studentIdValid);
+
+    // Check if the student ID already exists in account.txt
+    if (!isStudentIdUniqueInAccountFile(studentId)) {
+        printf("\033[1;31m"); // Set text color to red
+        printf("Error: Account already exists for Student ID %d.\n", studentId);
+        printf("\033[0m"); // Reset text color
+        sleep(2); // Pause for 2 seconds to display the error message
+        return;
+    }
 
     // Prompt the user to enter the fee amount
     printf("Enter Fee Amount: ");
@@ -610,6 +636,452 @@ void updateAccount() {
     getchar(); // Wait for Enter
 }
 
+void addResult() {
+    printf("\033[1;32m"); // Set text color to green
+    printf("Add Result\n");
+    printf("\033[0m"); // Reset text color
+
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open student.txt to check if the student ID exists
+    FILE *studentFile = fopen("Storage/student.txt", "r");
+    if (studentFile != NULL) {
+        struct Student student;
+        bool found = false;
+
+        while (fscanf(studentFile, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            if (student.id == studentId) {
+                found = true;
+                break; // Student ID found, break out of the loop
+            }
+        }
+
+        fclose(studentFile);
+
+        if (found) {
+            // Check if a result already exists for this student ID in result.txt
+            FILE *resultFile = fopen("Storage/result.txt", "r");
+            bool resultExists = false;
+
+            if (resultFile != NULL) {
+                int existingStudentId;
+                while (fscanf(resultFile, "%d", &existingStudentId) == 1) {
+                    if (existingStudentId == studentId) {
+                        resultExists = true;
+                        break; // Result exists for this student ID
+                    }
+                    // Skip the rest of the line
+                    int c;
+                    while ((c = fgetc(resultFile)) != '\n' && c != EOF);
+                }
+                fclose(resultFile);
+            } else {
+                printf("Error: Unable to open result file for reading.\n");
+            }
+
+            if (resultExists) {
+                // Ask the user if they want to delete the existing result
+                char choice;
+                printf("A result already exists for Student ID %d. Do you want to delete it and add a new one? (Y/N): ", studentId);
+                scanf(" %c", &choice);
+
+                if (choice == 'Y' || choice == 'y') {
+                    // Delete the existing result
+                    FILE *tempFile = fopen("Storage/temp_result.txt", "w");
+                    if (tempFile != NULL) {
+                        FILE *resultFile = fopen("Storage/result.txt", "r");
+                        int existingStudentId;
+                        while (fscanf(resultFile, "%d", &existingStudentId) == 1) {
+                            if (existingStudentId == studentId) {
+                                // Skip the existing result
+                                fscanf(resultFile, "%*[^\n]\n");
+                            } else {
+                                // Copy other results to the temporary file
+                                fprintf(tempFile, "%d", existingStudentId);
+                                char c;
+                                while ((c = fgetc(resultFile)) != EOF && c != '\n') {
+                                    fputc(c, tempFile);
+                                }
+                                fputc('\n', tempFile);
+                            }
+                        }
+                        fclose(resultFile);
+                        fclose(tempFile);
+
+                        // Rename the temporary file to result.txt
+                        remove("Storage/result.txt");
+                        rename("Storage/temp_result.txt", "Storage/result.txt");
+
+                        printf("\033[1;32m"); // Set text color to green
+                        printf("Existing result for Student ID %d deleted.\n", studentId);
+                        printf("\033[0m"); // Reset text color
+                    } else {
+                        printf("Error: Unable to create temporary result file.\n");
+                    }
+                } else {
+                    printf("\033[1;31m"); // Set text color to red
+                    printf("Operation canceled. Existing result for Student ID %d was not deleted.\n", studentId);
+                    printf("\033[0m"); // Reset text color
+                    return; // Do not add a new result
+                }
+            }
+
+            // Prompt the user to enter subject marks with input validation
+            double math, english, cProgramming, physics, chemistry;
+            
+            do {
+                printf("Enter Marks for Math (0-100): ");
+                scanf("%lf", &math);
+                if (math < 0 || math > 100) {
+                    printf("Error: Marks must be between 0 and 100.\n");
+                }
+            } while (math < 0 || math > 100);
+
+            do {
+                printf("Enter Marks for English (0-100): ");
+                scanf("%lf", &english);
+                if (english < 0 || english > 100) {
+                    printf("Error: Marks must be between 0 and 100.\n");
+                }
+            } while (english < 0 || english > 100);
+
+            do {
+                printf("Enter Marks for C Programming (0-100): ");
+                scanf("%lf", &cProgramming);
+                if (cProgramming < 0 || cProgramming > 100) {
+                    printf("Error: Marks must be between 0 and 100.\n");
+                }
+            } while (cProgramming < 0 || cProgramming > 100);
+
+            do {
+                printf("Enter Marks for Physics (0-100): ");
+                scanf("%lf", &physics);
+                if (physics < 0 || physics > 100) {
+                    printf("Error: Marks must be between 0 and 100.\n");
+                }
+            } while (physics < 0 || physics > 100);
+
+            do {
+                printf("Enter Marks for Chemistry (0-100): ");
+                scanf("%lf", &chemistry);
+                if (chemistry < 0 || chemistry > 100) {
+                    printf("Error: Marks must be between 0 and 100.\n");
+                }
+            } while (chemistry < 0 || chemistry > 100);
+
+            // Calculate total marks and GPA
+            double totalMarks = math + english + cProgramming + physics + chemistry;
+            double GPA = ((totalMarks / 500.0) * 100.0) / 25.0;
+
+            // Append results to result.txt
+            resultFile = fopen("Storage/result.txt", "a");
+            if (resultFile != NULL) {
+                fprintf(resultFile, "%d %.2lf %.2lf %.2lf %.2lf %.2lf %.2lf %.2lf\n", studentId, math, english, cProgramming, physics, chemistry, totalMarks, GPA);
+                fclose(resultFile);
+
+                printf("\033[1;32m"); // Set text color to green
+                printf("Result added successfully for Student ID %d.\n", studentId);
+                printf("\033[0m"); // Reset text color
+            } else {
+                printf("Error: Unable to open result file for writing.\n");
+            }
+        } else {
+            printf("\033[1;31m"); // Set text color to red
+            printf("Student with ID %d not found.\n", studentId);
+            printf("\033[0m"); // Reset text color
+        }
+    } else {
+        printf("Error: Unable to open student file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+
+
+void viewResult() {
+    printf("View Result\n");
+
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open student.txt to check if the student ID exists
+    FILE *studentFile = fopen("Storage/student.txt", "r");
+    if (studentFile != NULL) {
+        struct Student student;
+        bool found = false;
+
+        while (fscanf(studentFile, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            if (student.id == studentId) {
+                found = true;
+                break; // Student ID found, break out of the loop
+            }
+        }
+
+        fclose(studentFile);
+
+        if (found) {
+            // Open result.txt to check if results exist for this student ID
+            FILE *resultFile = fopen("Storage/result.txt", "r");
+            bool resultExists = false;
+
+            if (resultFile != NULL) {
+                int existingStudentId;
+                double math, english, cProgramming, physics, chemistry, totalMarks, GPA;
+
+                while (fscanf(resultFile, "%d %lf %lf %lf %lf %lf %lf %lf\n", &existingStudentId, &math, &english, &cProgramming, &physics, &chemistry, &totalMarks, &GPA) == 8) {
+                    if (existingStudentId == studentId) {
+                        resultExists = true;
+
+                        printf("Result for Student ID %d:\n", studentId);
+                        printf("+---------------------+------------+\n");
+                        printf("| Student Name        | %s      |\n", student.name);
+                        printf("| GPA                 | %.2lf       |\n", GPA);
+                        printf("+---------------------+------------+\n");
+                        printf("| Subject             | Marks      |\n");
+                        printf("+---------------------+------------+\n");
+                        printf("| Math                | %.2lf     |\n", math);
+                        printf("| English             | %.2lf     |\n", english);
+                        printf("| C Programming       | %.2lf     |\n", cProgramming);
+                        printf("| Physics             | %.2lf     |\n", physics);
+                        printf("| Chemistry           | %.2lf     |\n", chemistry);
+                        printf("+---------------------+------------+\n");
+                        printf("| Total Marks         | %.2lf     |\n", totalMarks);
+                        printf("+---------------------+------------+\n");
+
+                        break; // Displayed result, break out of the loop
+                    }
+                }
+
+                fclose(resultFile);
+            } else {
+                printf("Error: Unable to open result file for reading.\n");
+            }
+
+            if (!resultExists) {
+                printf("No result found for Student ID %d.\n", studentId);
+            }
+        } else {
+            printf("Student with ID %d not found.\n", studentId);
+        }
+    } else {
+        printf("Error: Unable to open student file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+void editResult() {
+    printf("Edit Result\n");
+
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open student.txt to check if the student ID exists
+    FILE *studentFile = fopen("Storage/student.txt", "r");
+    if (studentFile != NULL) {
+        struct Student student;
+        bool found = false;
+
+        while (fscanf(studentFile, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            if (student.id == studentId) {
+                found = true;
+                break; // Student ID found, break out of the loop
+            }
+        }
+
+        fclose(studentFile);
+
+        if (found) {
+            // Open result.txt to check if results exist for this student ID
+            FILE *resultFile = fopen("Storage/result.txt", "r");
+            bool resultExists = false;
+
+            if (resultFile != NULL) {
+                int existingStudentId;
+                double math, english, cProgramming, physics, chemistry, totalMarks, GPA;
+
+                // Create a temporary file for editing
+                FILE *tempFile = fopen("Storage/temp_result.txt", "w");
+
+                if (tempFile != NULL) {
+                    while (fscanf(resultFile, "%d %lf %lf %lf %lf %lf %lf %lf\n", &existingStudentId, &math, &english, &cProgramming, &physics, &chemistry, &totalMarks, &GPA) == 8) {
+                        if (existingStudentId == studentId) {
+                            resultExists = true;
+
+                            // Prompt the user to enter new subject marks with input validation
+                            do {
+                                printf("Enter new Marks for Math (0-100): ");
+                                scanf("%lf", &math);
+                                if (math < 0 || math > 100) {
+                                    printf("Error: Marks must be between 0 and 100.\n");
+                                }
+                            } while (math < 0 || math > 100);
+
+                            do {
+                                printf("Enter new Marks for English (0-100): ");
+                                scanf("%lf", &english);
+                                if (english < 0 || english > 100) {
+                                    printf("Error: Marks must be between 0 and 100.\n");
+                                }
+                            } while (english < 0 || english > 100);
+
+                            do {
+                                printf("Enter new Marks for C Programming (0-100): ");
+                                scanf("%lf", &cProgramming);
+                                if (cProgramming < 0 || cProgramming > 100) {
+                                    printf("Error: Marks must be between 0 and 100.\n");
+                                }
+                            } while (cProgramming < 0 || cProgramming > 100);
+
+                            do {
+                                printf("Enter new Marks for Physics (0-100): ");
+                                scanf("%lf", &physics);
+                                if (physics < 0 || physics > 100) {
+                                    printf("Error: Marks must be between 0 and 100.\n");
+                                }
+                            } while (physics < 0 || physics > 100);
+
+                            do {
+                                printf("Enter new Marks for Chemistry (0-100): ");
+                                scanf("%lf", &chemistry);
+                                if (chemistry < 0 || chemistry > 100) {
+                                    printf("Error: Marks must be between 0 and 100.\n");
+                                }
+                            } while (chemistry < 0 || chemistry > 100);
+
+                            // Recalculate total marks and GPA
+                            totalMarks = math + english + cProgramming + physics + chemistry;
+                            GPA = ((totalMarks / 500.0) * 100.0) / 25.0;
+                        }
+
+                        // Write the result to the temporary file
+                        fprintf(tempFile, "%d %.2lf %.2lf %.2lf %.2lf %.2lf %.2lf %.2lf\n", existingStudentId, math, english, cProgramming, physics, chemistry, totalMarks, GPA);
+                    }
+
+                    fclose(tempFile);
+
+                    // Close and remove the original result file
+                    fclose(resultFile);
+                    remove("Storage/result.txt");
+
+                    // Rename the temporary file to the original result file
+                    rename("Storage/temp_result.txt", "Storage/result.txt");
+
+                    printf("Result for Student ID %d edited successfully.\n", studentId);
+                } else {
+                    printf("Error: Unable to create temporary result file for editing.\n");
+                }
+            } else {
+                printf("Error: Unable to open result file for reading.\n");
+            }
+
+            if (!resultExists) {
+                printf("No result found for Student ID %d.\n", studentId);
+            }
+        } else {
+            printf("Student with ID %d not found.\n", studentId);
+        }
+    } else {
+        printf("Error: Unable to open student file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+void deleteResult() {
+    printf("Delete Result\n");
+
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open student.txt to check if the student ID exists
+    FILE *studentFile = fopen("Storage/student.txt", "r");
+    if (studentFile != NULL) {
+        struct Student student;
+        bool found = false;
+
+        while (fscanf(studentFile, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            if (student.id == studentId) {
+                found = true;
+                break; // Student ID found, break out of the loop
+            }
+        }
+
+        fclose(studentFile);
+
+        if (found) {
+            // Open result.txt to check if results exist for this student ID
+            FILE *resultFile = fopen("Storage/result.txt", "r");
+            bool resultExists = false;
+
+            if (resultFile != NULL) {
+                int existingStudentId;
+                double math, english, cProgramming, physics, chemistry, totalMarks, GPA;
+
+                // Create a temporary file for storing the results without the deleted entry
+                FILE *tempFile = fopen("Storage/temp_result.txt", "w");
+
+                if (tempFile != NULL) {
+                    while (fscanf(resultFile, "%d %lf %lf %lf %lf %lf %lf %lf\n", &existingStudentId, &math, &english, &cProgramming, &physics, &chemistry, &totalMarks, &GPA) == 8) {
+                        if (existingStudentId == studentId) {
+                            resultExists = true;
+
+                            // Skip the entry to delete it
+                            continue;
+                        }
+
+                        // Write the result to the temporary file
+                        fprintf(tempFile, "%d %.2lf %.2lf %.2lf %.2lf %.2lf %.2lf %.2lf\n", existingStudentId, math, english, cProgramming, physics, chemistry, totalMarks, GPA);
+                    }
+
+                    fclose(tempFile);
+
+                    // Close and remove the original result file
+                    fclose(resultFile);
+                    remove("Storage/result.txt");
+
+                    // Rename the temporary file to the original result file
+                    rename("Storage/temp_result.txt", "Storage/result.txt");
+
+                    printf("Result for Student ID %d deleted successfully.\n", studentId);
+                } else {
+                    printf("Error: Unable to create temporary result file for deletion.\n");
+                }
+            } else {
+                printf("Error: Unable to open result file for reading.\n");
+            }
+
+            if (!resultExists) {
+                printf("No result found for Student ID %d.\n", studentId);
+            }
+        } else {
+            printf("Student with ID %d not found.\n", studentId);
+        }
+    } else {
+        printf("Error: Unable to open student file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
 void handleStudent() {
     printf("\033[1;32m"); // Set text color to green
     printf("KPS-system\n");
@@ -705,10 +1177,50 @@ void handleAccount() {
 }
 
 void handleResult() {
-    printf("Handling Result Section\n");
-    // Call the result program from Programs folder
-    system("./Programs/result");
+    printf("\033[1;32m"); // Set text color to green
+    printf("Result Menu\n");
+    printf("\033[0m"); // Reset text color
+
+    int choice;
+
+    while (1) {
+        printf("\033[2J\033[H"); // Clear screen
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("Result Menu\n");
+        printf("\033[0m"); // Reset text color
+
+        printf("1. Add Result\n");
+        printf("2. View Result\n");
+        printf("3. Delete Result\n");
+        printf("4. Edit Result\n");
+        printf("5. Back to Main Menu\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addResult();
+                break;
+            case 2:
+                viewResult();
+                break;
+            case 3:
+                deleteResult();
+                break;
+            case 4:
+                editResult();
+                break;
+            case 5:
+                return; // Return to the main menu
+            default:
+                printf("\033[1;31m"); // Set text color to red
+                printf("Invalid choice. Please select a valid option.\n");
+                printf("\033[0m"); // Reset text color
+        }
+    }
 }
+
 
 void handleInformation() {
     printf("Handling Information Section\n");
