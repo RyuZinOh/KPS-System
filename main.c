@@ -17,7 +17,17 @@ struct Student {
     char phoneNumber[15];
     char faculty[50];
     int id;
+    double feeToBePaid;
+    double feePaid;
 };
+
+struct Account {
+    int studentId;
+    double feeAmount;
+    double feePaid;
+};
+
+
 
 struct Student students[MAX_STUDENTS];
 int studentCount = 0;
@@ -283,6 +293,323 @@ void editStudentById() {
     getchar();  // Wait for Enter
 }
 
+
+
+void addAccount() {
+    struct Account newAccount;
+
+    printf("\033[1;32m"); // Set text color to green
+    printf("Add Account\n");
+    printf("\033[0m"); // Reset text color
+
+    // Prompt the user to enter the student ID
+    int studentId;
+    bool studentIdValid = false;
+    do {
+        printf("Enter Student ID: ");
+        scanf("%d", &studentId);
+
+        // Check if the student ID exists in student.txt
+        if (!isStudentIdUniqueInFile(studentId)) {
+            studentIdValid = true;
+        } else {
+            printf("\033[1;31m"); // Set text color to red
+            printf("Error: Student ID does not exist. Please enter a valid ID.\n");
+            printf("\033[0m"); // Reset text color
+        }
+    } while (!studentIdValid);
+
+    // Prompt the user to enter the fee amount
+    printf("Enter Fee Amount: ");
+    scanf("%lf", &newAccount.feeAmount);
+
+    // Calculate the remaining fee (feeToBePaid - feePaid) and set feePaid to 0
+    newAccount.feePaid = 0;
+    newAccount.studentId = studentId;
+
+    // Save the new account to account.txt
+    FILE *accountFile = fopen("Storage/account.txt", "a");
+    if (accountFile != NULL) {
+        fprintf(accountFile, "%d %.2lf %.2lf\n", newAccount.studentId, newAccount.feeAmount, newAccount.feePaid);
+        fclose(accountFile);
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("Account added successfully.\n");
+        printf("\033[0m"); // Reset text color
+    } else {
+        printf("Error: Unable to open account file for writing.\n");
+    }
+}
+
+void viewAccount() {
+    printf("\033[1;32m"); // Set text color to green
+    printf("View Account\n");
+    printf("\033[0m"); // Reset text color
+
+    // Prompt the user to enter the student ID to view account details
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open the student.txt file to retrieve the student's name
+    FILE *studentFile = fopen("Storage/student.txt", "r");
+    if (studentFile != NULL) {
+        struct Student student; // Temporary variable to store student data while reading
+
+        // Search for the student with the specified ID
+        bool found = false;
+        while (fscanf(studentFile, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            if (student.id == studentId) {
+                found = true;
+                break;
+            }
+        }
+
+        fclose(studentFile);
+
+        if (found) {
+            // Open the account.txt file to retrieve fee-related details
+            FILE *accountFile = fopen("Storage/account.txt", "r");
+            if (accountFile != NULL) {
+                struct Account account; // Temporary variable to store account data while reading
+
+                // Search for the account with the specified student ID
+                found = false;
+                while (fscanf(accountFile, "%d %lf %lf\n", &account.studentId, &account.feeAmount, &account.feePaid) == 3) {
+                    if (account.studentId == studentId) {
+                        found = true;
+
+                        // Calculate the fee remaining (feeAmount - feePaid)
+                        double feeRemaining = account.feeAmount - account.feePaid;
+
+                        printf("\033[1;32m"); // Set text color to green
+                        printf("Account Details for Student ID %d:\n", studentId);
+                        printf("\033[0m"); // Reset text color
+                        printf("Student Name: %s\n", student.name);
+                        printf("Fee Paid: Rs %.2lf\n", account.feePaid);
+                        printf("Total Fee: Rs %.2lf\n", account.feeAmount);
+                        printf("Fee Remaining: Rs %.2lf\n", feeRemaining);
+
+                        break;
+                    }
+                }
+
+                fclose(accountFile);
+
+                if (!found) {
+                    printf("\033[1;31m"); // Set text color to red
+                    printf("No account found for Student ID %d.\n", studentId);
+                    printf("\033[0m"); // Reset text color
+                }
+            } else {
+                printf("Error: Unable to open account file for reading.\n");
+            }
+        } else {
+            printf("\033[1;31m"); // Set text color to red
+            printf("Student with ID %d not found.\n", studentId);
+            printf("\033[0m"); // Reset text color
+        }
+    } else {
+        printf("Error: Unable to open student file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+void deleteAccount() {
+    printf("\033[1;32m"); // Set text color to green
+    printf("Delete Account\n");
+    printf("\033[0m"); // Reset text color
+
+    // Prompt the user to enter the student ID to delete the account
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open the account.txt file for reading
+    FILE *accountFile = fopen("Storage/account.txt", "r");
+    if (accountFile != NULL) {
+        // Open a temporary file for writing
+        FILE *tempFile = fopen("Storage/temp_account.txt", "w");
+        if (tempFile != NULL) {
+            struct Account account; // Temporary variable to store account data while reading
+
+            // Search for the account with the specified student ID
+            bool found = false;
+            while (fscanf(accountFile, "%d %lf %lf\n", &account.studentId, &account.feeAmount, &account.feePaid) == 3) {
+                if (account.studentId == studentId) {
+                    found = true;
+                } else {
+                    // Write the account data to the temporary file
+                    fprintf(tempFile, "%d %.2lf %.2lf\n", account.studentId, account.feeAmount, account.feePaid);
+                }
+            }
+
+            fclose(tempFile); // Close the temporary file
+            fclose(accountFile); // Close the original account file
+
+            if (found) {
+                // Replace the original account.txt file with the temporary file
+                if (remove("Storage/account.txt") != 0) {
+                    printf("Error: Unable to delete the account file.\n");
+                } else if (rename("Storage/temp_account.txt", "Storage/account.txt") != 0) {
+                    printf("Error: Unable to update the account file.\n");
+                } else {
+                    printf("\033[1;32m"); // Set text color to green
+                    printf("Account for Student ID %d deleted successfully.\n", studentId);
+                    printf("\033[0m"); // Reset text color
+                }
+            } else {
+                printf("\033[1;31m"); // Set text color to red
+                printf("No account found for Student ID %d.\n", studentId);
+                printf("\033[0m"); // Reset text color
+            }
+        } else {
+            printf("Error: Unable to open temporary account file for writing.\n");
+        }
+    } else {
+        printf("Error: Unable to open account file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+void editAccount() {
+    printf("\033[1;32m"); // Set text color to green
+    printf("Edit Account\n");
+    printf("\033[0m"); // Reset text color
+
+    // Prompt the user to enter the student ID to edit the account
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open the account.txt file for reading
+    FILE *accountFile = fopen("Storage/account.txt", "r");
+    if (accountFile != NULL) {
+        // Open a temporary file for writing
+        FILE *tempFile = fopen("Storage/temp_account.txt", "w");
+        if (tempFile != NULL) {
+            struct Account account; // Temporary variable to store account data while reading
+
+            // Search for the account with the specified student ID
+            bool found = false;
+            while (fscanf(accountFile, "%d %lf %lf\n", &account.studentId, &account.feeAmount, &account.feePaid) == 3) {
+                if (account.studentId == studentId) {
+                    found = true;
+
+                    // Prompt the user to enter the new total fee
+                    printf("Enter New Total Fee: ");
+                    scanf("%lf", &account.feeAmount);
+                }
+
+                // Write the account data to the temporary file
+                fprintf(tempFile, "%d %.2lf %.2lf\n", account.studentId, account.feeAmount, account.feePaid);
+            }
+
+            fclose(tempFile); // Close the temporary file
+            fclose(accountFile); // Close the original account file
+
+            if (found) {
+                // Replace the original account.txt file with the temporary file
+                if (remove("Storage/account.txt") != 0) {
+                    printf("Error: Unable to delete the account file.\n");
+                } else if (rename("Storage/temp_account.txt", "Storage/account.txt") != 0) {
+                    printf("Error: Unable to update the account file.\n");
+                } else {
+                    printf("\033[1;32m"); // Set text color to green
+                    printf("Total fee for Student ID %d updated successfully.\n", studentId);
+                    printf("\033[0m"); // Reset text color
+                }
+            } else {
+                printf("\033[1;31m"); // Set text color to red
+                printf("No account found for Student ID %d.\n", studentId);
+                printf("\033[0m"); // Reset text color
+            }
+        } else {
+            printf("Error: Unable to open temporary account file for writing.\n");
+        }
+    } else {
+        printf("Error: Unable to open account file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
+void updateAccount() {
+    printf("\033[1;32m"); // Set text color to green
+    printf("Update Account\n");
+    printf("\033[0m"); // Reset text color
+
+    // Prompt the user to enter the student ID to update the account
+    int studentId;
+    printf("Enter Student ID: ");
+    scanf("%d", &studentId);
+
+    // Open the account.txt file for reading
+    FILE *accountFile = fopen("Storage/account.txt", "r");
+    if (accountFile != NULL) {
+        // Open a temporary file for writing
+        FILE *tempFile = fopen("Storage/temp_account.txt", "w");
+        if (tempFile != NULL) {
+            struct Account account; // Temporary variable to store account data while reading
+
+            // Search for the account with the specified student ID
+            bool found = false;
+            while (fscanf(accountFile, "%d %lf %lf\n", &account.studentId, &account.feeAmount, &account.feePaid) == 3) {
+                if (account.studentId == studentId) {
+                    found = true;
+
+                    // Prompt the user to enter the new fee paid
+                    printf("Enter New Fee Paid: ");
+                    scanf("%lf", &account.feePaid);
+                }
+
+                // Write the account data to the temporary file
+                fprintf(tempFile, "%d %.2lf %.2lf\n", account.studentId, account.feeAmount, account.feePaid);
+            }
+
+            fclose(tempFile); // Close the temporary file
+            fclose(accountFile); // Close the original account file
+
+            if (found) {
+                // Replace the original account.txt file with the temporary file
+                if (remove("Storage/account.txt") != 0) {
+                    printf("Error: Unable to delete the account file.\n");
+                } else if (rename("Storage/temp_account.txt", "Storage/account.txt") != 0) {
+                    printf("Error: Unable to update the account file.\n");
+                } else {
+                    printf("\033[1;32m"); // Set text color to green
+                    printf("Account for Student ID %d updated successfully.\n", studentId);
+                    printf("\033[0m"); // Reset text color
+                }
+            } else {
+                printf("\033[1;31m"); // Set text color to red
+                printf("No account found for Student ID %d.\n", studentId);
+                printf("\033[0m"); // Reset text color
+            }
+        } else {
+            printf("Error: Unable to open temporary account file for writing.\n");
+        }
+    } else {
+        printf("Error: Unable to open account file for reading.\n");
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n'); // Clear input buffer
+    getchar(); // Wait for Enter
+}
+
 void handleStudent() {
     printf("\033[1;32m"); // Set text color to green
     printf("KPS-system\n");
@@ -329,9 +656,52 @@ void handleStudent() {
 }
 
 void handleAccount() {
-    printf("Handling Account Section\n");
-    // Call the account program from Programs folder
-    system("./Programs/account");
+    printf("\033[1;32m"); // Set text color to green
+    printf("Account Menu\n");
+    printf("\033[0m"); // Reset text color
+
+    int choice;
+
+    while (1) {
+        printf("\033[2J\033[H"); // Clear screen
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("Account Menu\n");
+        printf("\033[0m"); // Reset text color
+
+        printf("1. Add Account\n");
+        printf("2. View Account\n");
+        printf("3. Delete Account\n");
+        printf("4. Edit Account\n");
+        printf("5. Update Account\n");
+        printf("6. Back to Main Menu\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                addAccount();
+                break;
+            case 2:
+                viewAccount();
+                break;
+            case 3:
+                deleteAccount();
+                break;
+            case 4:
+               editAccount();
+                break;
+            case 5:
+                updateAccount();
+                break;
+            case 6:
+                return; // Return to the main menu
+            default:
+                printf("\033[1;31m"); // Set text color to red
+                printf("Invalid choice. Please select a valid option.\n");
+                printf("\033[0m"); // Reset text color
+        }
+    }
 }
 
 void handleResult() {
