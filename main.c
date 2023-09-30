@@ -22,6 +22,24 @@ struct Student {
 struct Student students[MAX_STUDENTS];
 int studentCount = 0;
 
+// Function to check if a student ID already exists in the file
+bool isStudentIdUniqueInFile(int id) {
+    FILE *file = fopen("Storage/student.txt", "r");
+    if (file != NULL) {
+        struct Student student;
+
+        while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+            if (student.id == id) {
+                fclose(file);
+                return false; // ID already exists in the file
+            }
+        }
+
+        fclose(file);
+    }
+    return true; // ID is unique in the file
+}
+
 // Function to add a student
 void addStudent() {
     if (studentCount < MAX_STUDENTS) {
@@ -43,8 +61,17 @@ void addStudent() {
         printf("Faculty: ");
         scanf("%s", newStudent.faculty);
 
-        printf("Student ID: ");
-        scanf("%d", &newStudent.id);
+        // Check if the student ID is unique in the file
+        do {
+            printf("Student ID: ");
+            scanf("%d", &newStudent.id);
+
+            if (!isStudentIdUniqueInFile(newStudent.id)) {
+                printf("\033[1;31m"); // Set text color to red
+                printf("Error: Student ID already exists. Please enter a unique ID.\n");
+                printf("\033[0m"); // Reset text color
+            }
+        } while (!isStudentIdUniqueInFile(newStudent.id));
 
         students[studentCount++] = newStudent;
 
@@ -178,40 +205,82 @@ void deleteStudentById() {
     getchar();  // Wait for Enter
 }
 
-// Function to edit a student by ID
 void editStudentById() {
     int editId;
     printf("Enter student ID to edit: ");
     scanf("%d", &editId);
 
-    for (int i = 0; i < studentCount; i++) {
-        if (students[i].id == editId) {
-            printf("\033[1;32m"); // Set text color to green
-            printf("Edit Student\n");
-            printf("\033[0m"); // Reset text color
+    bool found = false;  // Flag to indicate if the student was found
 
-            printf("Name: ");
-            scanf("%s", students[i].name);
+    // Open the student.txt file for reading
+    FILE *file = fopen("Storage/student.txt", "r");
 
-            printf("Father's Name: ");
-            scanf("%s", students[i].fatherName);
+    if (file != NULL) {
+        struct Student student;  // Temporary variable to store student data while reading
 
-            printf("Phone Number: ");
-            scanf("%s", students[i].phoneNumber);
+        // Open the same file for writing (this will clear its content)
+        FILE *tempFile = fopen("Storage/temp.txt", "w");
 
-            printf("Faculty: ");
-            scanf("%s", students[i].faculty);
+        if (tempFile != NULL) {
+            // Read data from the file and copy to the temporary file while checking for the student to edit
+            while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
+                if (student.id == editId) {
+                    // Student found, allow editing
+                    printf("\033[1;32m"); // Set text color to green
+                    printf("Edit Student\n");
+                    printf("\033[0m"); // Reset text color
 
-            printf("\033[1;32m"); // Set text color to green
-            printf("Student with ID %d edited successfully.\n", editId);
-            printf("\033[0m"); // Reset text color
-            return;
+                    printf("Name: ");
+                    scanf("%s", student.name);
+
+                    printf("Father's Name: ");
+                    scanf("%s", student.fatherName);
+
+                    printf("Phone Number: ");
+                    scanf("%s", student.phoneNumber);
+
+                    printf("Faculty: ");
+                    scanf("%s", student.faculty);
+
+                    printf("\033[1;32m"); // Set text color to green
+                    printf("Student with ID %d edited successfully.\n", editId);
+                    printf("\033[0m"); // Reset text color
+
+                    found = true;  // Student found and edited
+                }
+
+                fprintf(tempFile, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, student.id);
+            }
+
+            fclose(tempFile);  // Close the temporary file
+        } else {
+            printf("Error: Unable to open temporary file for writing.\n");
         }
+
+        fclose(file);  // Close the original file
+
+        // If the student was found and edited, replace the original file with the temporary file
+        if (found) {
+            if (remove("Storage/student.txt") != 0) {
+                printf("Error: Unable to delete the student data file.\n");
+            } else if (rename("Storage/temp.txt", "Storage/student.txt") != 0) {
+                printf("Error: Unable to update the student data file.\n");
+            }
+        }
+    } else {
+        printf("Error: Unable to open student data file for reading.\n");
     }
 
-    printf("\033[1;31m"); // Set text color to red
-    printf("Student with ID %d not found.\n", editId);
-    printf("\033[0m"); // Reset text color
+    if (!found) {
+        printf("\033[1;31m"); // Set text color to red
+        printf("Student with ID %d not found.\n", editId);
+        printf("\033[0m"); // Reset text color
+    }
+
+    // Wait for the user to press Enter before returning
+    printf("Press Enter to continue...");
+    while (getchar() != '\n');  // Clear input buffer
+    getchar();  // Wait for Enter
 }
 
 void handleStudent() {
