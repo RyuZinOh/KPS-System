@@ -1,71 +1,86 @@
-# KPS-System
-![GitHub repo size](https://img.shields.io/github/repo-size/RyuZinOh/KPS-System)
-![GitHub license](https://img.shields.io/github/license/RyuZinOh/KPS-System)
-![GitHub language](https://img.shields.io/github/languages/top/RyuZinOh/KPS-System?style=for-the-badge)
-<table>
-  <tr>
-    <td align="center">
-      <img src="Assets/kps-logo.png" alt="kps-logo" width="150">
-    </td>
-  </tr>
-</table>
-This repository contains a simple Student Management System written in C. The program allows users to add, view, update, and delete student records. It demonstrates basic file handling operations for data storage.
 
-## Dependencies
+# KPS-PROJECT: Student Data Management System
 
-The Student Management System does not have any external dependencies. It is implemented using standard C libraries and functions.
+KPS-PROJECT is a versatile command-line program designed for efficient student data management. It empowers users to store, organize, and manipulate student records, academic results, and user accounts.
 
-## How to Run
+## Features
 
-To run the KPS-System on your local machine, follow these steps:
+| Feature | Description |
+| ------- | ----------- |
+| **Student Data Management** | Store and manage essential student information, including name, father's name, phone number, faculty, and student ID. |
+| **Result Management** | Record and manage academic results for each student, tracking subject marks and calculating GPA. |
+| **Account Management** | Create and manage user accounts, ensuring secure access to the system. |
+| **Information Separation** | Locate and count students belonging to a specific faculty. |
 
-1. Clone the repository to your local machine using Git:
-   ```bash
-   git clone https://github.com/RyuZinOh/KPS-System.git
+## Prerequisites
+
+Before using KPS-PROJECT, ensure you have the following prerequisites installed:
+
+- **C Compiler:** You'll need a C compiler like GCC.
+- **Terminal or Command Prompt:** A terminal or command prompt for running the program.
+
+## Getting Started
+
+Follow these steps to set up and run KPS-PROJECT on your system:
+
+1. **Clone the Repository:** Clone this repository to your local machine.
+
+   ```shell
+   git clone https://github.com/your-username/KPS-PROJECT.git
    ```
 
-2. Navigate to the project directory:
-   ```bash
-   cd KPS-System
-   cd main_program
+2. **Navigate to the Project Directory:** Use the `cd` command to navigate to the project directory.
+
+   ```shell
+   cd KPS-PROJECT
    ```
 
-3. Compile the C program using a C compiler (e.g., gcc):
-   ```bash
-   gcc KPS.c
+3. **Compile the Program:** Compile the source code to create the executable.
+
+   ```shell
+   gcc main.c -o kps_project
    ```
 
-4. Run the executable:
-   ```bash
-   ./KPS.exe
+4. **Run the Program:** Execute the program.
+
+   ```shell
+   ./main.exe or ./main.out
    ```
 
 ## Usage
 
-- Upon running the program, you will be presented with a menu of options:
-  ```
-  Student Management System Menu
-  1. Attandanc e Section
-  2. Accouting Section
-  3. Result Section
-  4. View Student Basic Information
-  5. Exit
-  ```
-- Use the corresponding option number to perform the desired operation.
-- The student data will be stored in the corresponding `.txt` file in the project directory.
-## Screenshots
-![SS](Assets/kps_pic.png)
+KPS-PROJECT offers a user-friendly interface with multiple options for managing student data. Here's how to get the most out of the program:
 
-## Contribution
+- **Main Menu:** Upon running the program, you'll see a main menu with various options. Choose an option by entering the corresponding number.
+- **Help Command:** In the main menu, use the `hhelp` command to access helpful tips and tricks for using the program efficiently.
 
-Contributions to the Student Management System project are welcome! If you find any bugs or have suggestions for improvements, please feel free to open an issue or submit a pull request.
+## Main Menu Options
+
+| Option | Description |
+| ------ | ----------- |
+| **1. Manage Student Data** | Access student data management features such as adding, viewing, and editing student records. |
+| **2. Manage Academic Results** | Perform actions related to academic results, including adding, viewing, editing, and deleting. |
+| **3. Account Management** | Create, manage, and secure user accounts. |
+| **4. Information Separation** | Find and count students based on their faculty. |
+| **5. Exit** | Quit the program. |
+
+## Tips and Tricks
+
+Here are some tips to make the most of KPS-PROJECT:
+
+- To view all student records, select the "Manage Student Data" option and then choose "View All Students."
+- Use the "Information Separation" feature to find students belonging to a specific faculty.
+- Maintain data security by clearing account data when needed using the "Account Management" menu.
 
 ## License
 
-This project is licensed under the GNU License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. For more details, see the [LICENSE](LICENSE) file.
 
-## Status
+## Contributing
 
-This project is actively maintained and is open for contributions. Feel free to check out the [issues](https://github.com/RyuZinOh/KPS-System/Issues) page to see what's currently being worked on or to report any problems.
+Contributions are welcome! Please feel free to open an issue or submit a pull request.
 
+## Contact
+
+If you have questions or need assistance, please contact [Safal Lama](safalisgod@gmail.com).
 
