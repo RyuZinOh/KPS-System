@@ -1235,7 +1235,10 @@ void infoSeparation() {
         // Read data from the file and check faculty
         while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
             if (strcmp(student.faculty, faculty) == 0) {
-                printf("Name: %s\n", student.name);
+                if (studentCount == 0) {
+                    printf("Name: "); // Print "Name: " only once
+                }
+                printf("%s, ", student.name); // Print the student's name
                 studentCount++;
             }
         }
@@ -1243,7 +1246,7 @@ void infoSeparation() {
         fclose(file); // Close the file
 
         if (studentCount > 0) {
-            printf("\033[1;32m"); // Set text color to green
+            printf("\n\033[1;32m"); // Set text color to green
             printf("Total students with faculty '%s': %d\n", faculty, studentCount);
             printf("\033[0m"); // Reset text color
         } else {
@@ -1267,14 +1270,14 @@ void infoSeparation() {
 
 //handling section
 void handleStudent() {
-    printf("\033[1;32m"); // Set text color to green
-    printf("KPS-system\n");
-    printf("\033[0m"); // Reset text color
-
     int choice;
 
     while (1) {
         printf("\033[2J\033[H"); // Clear screen
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("KPS-system\n");
+        printf("\033[0m"); // Reset text color
 
         printf("\033[1;32m"); // Set text color to green
         printf("Student Menu\n");
@@ -1307,18 +1310,22 @@ void handleStudent() {
                 printf("\033[1;31m"); // Set text color to red
                 printf("Invalid choice. Please select a valid option.\n");
                 printf("\033[0m"); // Reset text color
+
+                printf("Press Enter to continue...");
+                getchar(); // Wait for Enter key press
+                getchar(); // Consume the Enter key press
         }
     }
 }
 void handleAccount() {
-    printf("\033[1;32m"); // Set text color to green
-    printf("Account Menu\n");
-    printf("\033[0m"); // Reset text color
-
     int choice;
 
     while (1) {
         printf("\033[2J\033[H"); // Clear screen
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("KPS-system\n");
+        printf("\033[0m"); // Reset text color
 
         printf("\033[1;32m"); // Set text color to green
         printf("Account Menu\n");
@@ -1344,7 +1351,7 @@ void handleAccount() {
                 deleteAccount();
                 break;
             case 4:
-               editAccount();
+                editAccount();
                 break;
             case 5:
                 updateAccount();
@@ -1355,18 +1362,22 @@ void handleAccount() {
                 printf("\033[1;31m"); // Set text color to red
                 printf("Invalid choice. Please select a valid option.\n");
                 printf("\033[0m"); // Reset text color
+
+                printf("Press Enter to continue...");
+                getchar(); // Wait for Enter key press
+                getchar(); // Consume the Enter key press
         }
     }
 }
 void handleResult() {
-    printf("\033[1;32m"); // Set text color to green
-    printf("Result Menu\n");
-    printf("\033[0m"); // Reset text color
-
     int choice;
 
     while (1) {
         printf("\033[2J\033[H"); // Clear screen
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("KPS-system\n");
+        printf("\033[0m"); // Reset text color
 
         printf("\033[1;32m"); // Set text color to green
         printf("Result Menu\n");
@@ -1399,18 +1410,22 @@ void handleResult() {
                 printf("\033[1;31m"); // Set text color to red
                 printf("Invalid choice. Please select a valid option.\n");
                 printf("\033[0m"); // Reset text color
+
+                printf("Press Enter to continue...");
+                getchar(); // Wait for Enter key press
+                getchar(); // Consume the Enter key press
         }
     }
 }
 void handleInformation() {
-    printf("\033[1;32m"); // Set text color to green
-    printf("Information Menu\n");
-    printf("\033[0m"); // Reset text color
-
     int choice;
 
     while (1) {
         printf("\033[2J\033[H"); // Clear screen
+
+        printf("\033[1;32m"); // Set text color to green
+        printf("KPS-system\n");
+        printf("\033[0m"); // Reset text color
 
         printf("\033[1;32m"); // Set text color to green
         printf("Information Menu\n");
@@ -1439,7 +1454,7 @@ void handleInformation() {
                 clearAccountData();
                 break;
             case 5:
-                infoSeparation(); 
+                infoSeparation();
                 break;
             case 6:
                 return; // Return to the main menu
@@ -1447,50 +1462,46 @@ void handleInformation() {
                 printf("\033[1;31m"); // Set text color to red
                 printf("Invalid choice. Please select a valid option.\n");
                 printf("\033[0m"); // Reset text color
+
+                printf("Press Enter to continue...");
+                getchar(); // Wait for Enter key press
+                getchar(); // Consume the Enter key press
         }
     }
 }
 
-
 //help section 
-// Function to display detailed help and tips
 void showHelp() {
     printf("\nHelp - Tips and Tricks\n");
 
     printf("\n1. Student Information:\n");
     printf("- In the Student Information section, you can manage student data.\n");
-    printf("- You can add new student records, view all students' information, and delete all student data if needed.\n");
-    printf("- To add a new student, select '1' from the main menu and follow the prompts.\n");
-    printf("- To view all students' information, select '1' and then '1' again.\n");
-    printf("- To delete all student data, select '1' and then '3'. This action is irreversible.\n");
+    printf("- You can perform the following actions:\n");
+    printf("    1. Add a new student record\n");
+    printf("    2. View all students' information\n");
+    printf("    3. Delete all student data (irreversible)\n");
 
     printf("\n2. Account:\n");
     printf("- In the Account section, you can manage user accounts.\n");
-    printf("- You can clear all account data if needed, which will remove all user accounts.\n");
-    printf("- To clear account data, select '2' from the main menu and then confirm by typing 'yes'.\n");
-    printf("- Be cautious when clearing account data, as it cannot be undone.\n");
+    printf("    - You can clear all account data (remove all user accounts), use with caution.\n");
 
     printf("\n3. Result Management:\n");
     printf("- In the Result Management section, you can manage student results.\n");
-    printf("- You can add, view, edit, or delete student results.\n");
-    printf("- To add a new result, select '3' from the main menu and follow the prompts.\n");
-    printf("- To view a student's result, select '3' and then '2' and enter the student's ID.\n");
-    printf("- To edit a student's result, select '3' and then '3' and enter the student's ID.\n");
-    printf("- To delete a student's result, select '3' and then '4' and enter the student's ID.\n");
-    printf("- You can also clear all result data by selecting '3' and then '5'. This action is irreversible.\n");
+    printf("    1. Add a new result\n");
+    printf("    2. View a student's result\n");
+    printf("    3. Edit a student's result\n");
+    printf("    4. Delete a student's result\n");
+    printf("    5. Clear all result data (irreversible)\n");
 
     printf("\n4. Help:\n");
     printf("- You are here! This menu provides tips and tricks for using the program.\n");
 
     printf("\n5. Exit:\n");
     printf("- Use this option to exit the program.\n");
-    
-    printf("\nPress Enter to continue...");
-    while (getchar() != '\n'); // Clear input buffer
-    getchar(); // Wait for Enter
+
+
 }
 
-//main function
 int main() {
     int choice;
 
@@ -1506,8 +1517,8 @@ int main() {
         printf("2. Account\n");
         printf("3. Result\n");
         printf("4. Information\n");
-        printf("5. Help\n"); // Added "Help" option
-        printf("6. Exit\n"); // Replaced the old "5. Exit" with "6. Exit"
+        printf("5. Help\n");
+        printf("6. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -1535,6 +1546,10 @@ int main() {
                 printf("Invalid choice. Please select a valid option.\n");
                 printf("\033[0m"); // Reset text color
         }
+
+        printf("Press Enter to continue...");
+        getchar(); // Wait for Enter key press
+        getchar(); // Consume the Enter key press
     }
 
     return 0;
