@@ -1134,10 +1134,11 @@ void clearAccountData() {
     while (getchar() != '\n'); // Clear input buffer
     getchar(); // Wait for Enter
 }
+
 int compareIntegers(const void *a, const void *b) {
-    const int *intA = (const int *)a;
-    const int *intB = (const int *)b;
-    return *intA - *intB;
+    const struct Student *studentA = (const struct Student *)a;
+    const struct Student *studentB = (const struct Student *)b;
+    return studentA->id - studentB->id;
 }
 void viewAllStudents() {
     printf("\033[1;32m"); // Set text color to green
@@ -1148,6 +1149,10 @@ void viewAllStudents() {
     FILE *file = fopen("Storage/student.txt", "r");
 
     if (file != NULL) {
+        // Reset the studentCount and students array
+        studentCount = 0;
+        memset(students, 0, sizeof(students));
+
         struct Student student; // Temporary variable to store student data while reading
 
         // Read data from the file and store it in the students array
