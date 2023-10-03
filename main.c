@@ -30,7 +30,6 @@ struct Account {
 // Define subject names
 char* subjectNames[] = {"Nepali", "English", "Math", "Science", "C Programming"};
 
-
 struct Student students[MAX_STUDENTS];
 int studentCount = 0;
 
