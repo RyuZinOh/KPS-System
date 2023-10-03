@@ -1,0 +1,33 @@
+HELP- TIPS AND TRICKS
+======================
+1. Student Information:
+- In the Student Information section, you can manage student data.
+- You can perform the following actions:
+    1. Add a new student record: Allows you to add a new student's information to the system.
+    2. View all students' information: Displays a list of all students and their details.
+    3. Delete all student data (irreversible): Clears all student data from the system, use with caution.
+
+2. Account:
+- In the Account section, you can manage user accounts.
+    1. Add Account: Create a new user account for accessing the system.
+    2. View Account: Display the details of a user account.
+    3. Delete Account: Remove a user account from the system.
+    4. Edit Account: Modify user account information.
+    5. Update Account: Change the password of an existing user account.
+    6. Clear Account Data (irreversible): Deletes all user accounts, use with caution.
+
+3. Result Management:
+- In the Result Management section, you can manage student results.
+    1. Add a new result: Record a new result for a student.
+    2. View a student's result: Display a student's result details.
+    3. Edit a student's result: Modify a student's result information.
+    4. Delete a student's result: Remove a student's result from the system.
+    5. Clear Result Data (irreversible): Clears all result data, use with caution.
+
+4. Information:
+- In the Information section, you can perform the following actions:
+    1. View All Information: Display information about all students.
+    2. Delete Student Data: Clear all student data (irreversible), use with caution.
+    3. Clear Result Data: Clear all result data (irreversible), use with caution.
+    4. Clear Account Data: Clear all user accounts (irreversible), use with caution.
+    5. Information Separation: Separate and display information by faculty.
