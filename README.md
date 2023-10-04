@@ -4,8 +4,7 @@
 KPS-PROJECT is a versatile command-line program designed for efficient student data management. It empowers users to store, organize, and manipulate student records, academic results, and user accounts.
 
 ## Main ALgorithm
-
-```Bash
+```bash
 # Main Program Algorithm
 
 ## Step 1: User Authentication
@@ -39,10 +38,10 @@ KPS-PROJECT is a versatile command-line program designed for efficient student d
 ### Step 2.1: User Choice Handling
 
 11. Based on the user's choice, execute the corresponding menu function or action:
-    - If the user chooses "Student," go to the Student Menu.
-    - If the user chooses "Account," go to the Account Menu.
-    - If the user chooses "Result," go to the Result Menu.
-    - If the user chooses "Information," go to the Information Menu.
+    - If the user chooses "Student," go to the Student Menu (`handleStudent` function).
+    - If the user chooses "Account," go to the Account Menu (`handleAccount` function).
+    - If the user chooses "Result," go to the Result Menu (`handleResult` function).
+    - If the user chooses "Information," go to the Information Menu (`handleInformation` function).
     - If the user chooses "Help," display helpful information.
     - If the user chooses "Exit," exit the program.
 
@@ -51,14 +50,14 @@ KPS-PROJECT is a versatile command-line program designed for efficient student d
 12. After executing a menu option, prompt the user to press Enter to continue.
 13. Clear the screen and return to the main menu loop.
 
-## Step 3: Student Menu
+## Step 3: Student Menu (`handleStudent` function)
 
 14. Enter the Student Menu loop.
 15. Display the following student-related options:
-    - Add Student
-    - View Student by ID
-    - Delete Student by ID
-    - Edit Student by ID
+    - Add Student (`addStudent` function)
+    - View Student by ID (`viewStudentById` function)
+    - Delete Student by ID (`deleteStudentById` function)
+    - Edit Student by ID (`editStudentById` function)
     - Back to Main Menu
 16. Accept the user's choice.
 
@@ -76,15 +75,15 @@ KPS-PROJECT is a versatile command-line program designed for efficient student d
 18. After executing a student menu option, prompt the user to press Enter to continue.
 19. Clear the screen and return to the Student Menu loop.
 
-## Step 4: Account Menu
+## Step 4: Account Menu (`handleAccount` function)
 
 20. Enter the Account Menu loop.
 21. Display the following account-related options:
-    - Add Account
-    - View Account
-    - Delete Account
-    - Edit Account
-    - Update Account
+    - Add Account (`addAccount` function)
+    - View Account (`viewAccount` function)
+    - Delete Account (`deleteAccount` function)
+    - Edit Account (`editAccount` function)
+    - Update Account (`updateAccount` function)
     - Back to Main Menu
 22. Accept the user's choice.
 
@@ -103,14 +102,14 @@ KPS-PROJECT is a versatile command-line program designed for efficient student d
 24. After executing an account menu option, prompt the user to press Enter to continue.
 25. Clear the screen and return to the Account Menu loop.
 
-## Step 5: Result Menu
+## Step 5: Result Menu (`handleResult` function)
 
 26. Enter the Result Menu loop.
 27. Display the following result-related options:
-    - Add Result
-    - View Result
-    - Delete Result
-    - Edit Result
+    - Add Result (`addResult` function)
+    - View Result (`viewResult` function)
+    - Delete Result (`deleteResult` function)
+    - Edit Result (`editResult` function)
     - Back to Main Menu
 28. Accept the user's choice.
 
@@ -128,15 +127,15 @@ KPS-PROJECT is a versatile command-line program designed for efficient student d
 30. After executing a result menu option, prompt the user to press Enter to continue.
 31. Clear the screen and return to the Result Menu loop.
 
-## Step 6: Information Menu
+## Step 6: Information Menu (`handleInformation` function)
 
 32. Enter the Information Menu loop.
 33. Display the following information-related options:
-    - View All Students
-    - Delete Student Data
-    - Clear Result Data
-    - Clear Account Data
-    - Information Separation
+    - View All Students (`viewAllStudents` function)
+    - Delete Student Data (`deleteStudentData` function)
+    - Clear Result Data (`clearResultData` function)
+    - Clear Account Data (`clearAccountData` function)
+    - Information Separation (`infoSeparation` function)
     - Back to Main Menu
 34. Accept the user's choice.
 
@@ -156,12 +155,7 @@ KPS-PROJECT is a versatile command-line program designed for efficient student d
 37. Clear the screen and return to the Information Menu loop.
 
 ```
-## Prerequisites
 
-Before using KPS-PROJECT, ensure you have the following prerequisites installed:
-
-- **C Compiler:** You'll need a C compiler like GCC.
-- **Terminal or Command Prompt:** A terminal or command prompt for running the program.
 
 ## License
 
