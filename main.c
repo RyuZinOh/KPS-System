@@ -28,7 +28,7 @@ struct Account {
 };
 
 // Define subject names
-char* subjectNames[] = {"Nepali", "English", "Math", "Science", "C Programming"};
+char* subjectNames[] = {"Nepali", "English", "Math", "Science", "Computer"};
 
 struct Student students[MAX_STUDENTS];
 int studentCount = 0;
@@ -51,7 +51,7 @@ void showHelp() {
     }
 }
 
-//check student
+//important checks
 int isStudentIdExists(int studentId) {
     FILE *file = fopen("Storage/student.txt", "r");
 
@@ -70,7 +70,6 @@ int isStudentIdExists(int studentId) {
 
     return 0; // Student ID does not exist
 }
-//check result
 int isResultIdExists(int studentId) {
     FILE *file = fopen("Storage/result.txt", "r");
     if (file == NULL) {
@@ -94,7 +93,6 @@ int isResultIdExists(int studentId) {
     fclose(file);
     return 0; // Student ID not found
 }
-//check account
 int isStudentIdUniqueInAccountFile(int studentId) {
     FILE *accountFile = fopen("Storage/account.txt", "r");
 
@@ -116,38 +114,47 @@ int isStudentIdUniqueInAccountFile(int studentId) {
 
 //student settings
 void addStudent() {
-    system("cls");
     int studentId;
-    printf("Enter Student ID: ");
-    scanf("%d", &studentId);
-
-    // Check if the student ID already exists
-    if (isStudentIdExists(studentId)) {
-        printf("Student with ID %d already exists.\n", studentId);
-        return;
-    }
-
     struct Student student;
-    student.id = studentId;
 
-    printf("Enter Name: ");
-    scanf("%s", student.name);
-    printf("Enter Father's Name: ");
-    scanf("%s", student.fatherName);
-    printf("Enter Phone Number: ");
-    scanf("%s", student.phoneNumber);
-    printf("Enter Faculty: ");
-    scanf("%s", student.faculty);
+    while (1) {
+        system("cls");
 
-    // Open the student.txt file for appending
-    FILE *file = fopen("Storage/student.txt", "a");
+        printf("Enter Student ID: ");
+        scanf("%d", &studentId);
 
-    if (file != NULL) {
-        fprintf(file, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, student.id);
-        fclose(file);
-        printf("Student record added successfully.\n");
-    } else {
-        printf("Error: Unable to open file for appending.\n");
+        if (isStudentIdExists(studentId)) {
+            printf("Student with ID %d already exists.\n", studentId);
+        } else {
+            student.id = studentId;
+
+            printf("Enter Name: ");
+            scanf("%s", student.name);
+            printf("Enter Father's Name: ");
+            scanf("%s", student.fatherName);
+            printf("Enter Phone Number: ");
+            scanf("%s", student.phoneNumber);
+            printf("Enter Faculty: ");
+            scanf("%s", student.faculty);
+
+            FILE *file = fopen("Storage/student.txt", "a");
+
+            if (file != NULL) {
+                fprintf(file, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, student.id);
+                fclose(file);
+                printf("Student record added successfully.\n");
+            } else {
+                printf("Error: Unable to open file for appending.\n");
+            }
+        }
+
+        char choice;
+        printf("Do you want to add another student? (Y/N): ");
+        scanf(" %c", &choice);
+
+        if (choice != 'Y' && choice != 'y') {
+            break;
+        }
     }
 }
 void viewStudentById() {
@@ -156,7 +163,6 @@ void viewStudentById() {
     printf("Enter Student ID: ");
     scanf("%d", &studentId);
 
-    // Open the student.txt file for reading
     FILE *file = fopen("Storage/student.txt", "r");
 
     if (file != NULL) {
@@ -190,14 +196,12 @@ void editStudentById() {
     printf("Enter Student ID to edit: ");
     scanf("%d", &studentId);
 
-    // Open the student.txt file for reading and writing
     FILE *file = fopen("Storage/student.txt", "r+");
 
     if (file != NULL) {
         struct Student student;
         int found = 0;
 
-        // Create a temporary file to copy non-edited records
         FILE *tempFile = fopen("Storage/student_temp.txt", "w");
 
         while (fscanf(file, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
@@ -219,7 +223,6 @@ void editStudentById() {
         fclose(file);
         fclose(tempFile);
 
-        // Rename the temporary file to overwrite the original file
         remove("Storage/student.txt");
         rename("Storage/student_temp.txt", "Storage/student.txt");
 
@@ -238,14 +241,12 @@ void deleteStudentById() {
     printf("Enter Student ID to delete: ");
     scanf("%d", &studentId);
 
-    // Open the student.txt file for reading and writing
     FILE *file = fopen("Storage/student.txt", "r+");
 
     if (file != NULL) {
         struct Student student;
         int found = 0;
 
-        // Create a temporary file to copy non-deleted records
         FILE *tempFile = fopen("Storage/student_temp.txt", "w");
 
         while (fscanf(file, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
@@ -260,7 +261,6 @@ void deleteStudentById() {
         fclose(file);
         fclose(tempFile);
 
-        // Rename the temporary file to overwrite the original file
         remove("Storage/student.txt");
         rename("Storage/student_temp.txt", "Storage/student.txt");
 
@@ -277,13 +277,10 @@ void deleteStudentById() {
 //information settings
 void clearResultData() {
     printf("Warning: This will clear all result data. Are you sure you want to proceed? (Y/N): ");
-
     char choice;
     scanf(" %c", &choice);
-
     if (choice == 'Y' || choice == 'y') {
         FILE *resultFile = fopen("Storage/result.txt", "w");
-
         if (resultFile != NULL) {
             fclose(resultFile);
             printf("Result data cleared successfully.\n");
@@ -296,13 +293,10 @@ void clearResultData() {
 }
 void clearAccountData() {
     printf("Warning: This action will clear all account data. Do you want to continue? (yes/no): ");
-
     char response[10];
     scanf("%9s", response);
-
     if (strcmp(response, "yes") == 0 || strcmp(response, "Yes") == 0 || strcmp(response, "YES") == 0) {
         FILE *accountFile = fopen("Storage/account.txt", "w");
-
         if (accountFile != NULL) {
             fclose(accountFile);
             printf("Account data cleared successfully.\n");
@@ -320,23 +314,16 @@ int compareIntegers(void *a, void *b) {
 }
 void viewAllStudents() {
     FILE *file = fopen("Storage/student.txt", "r");
-
     if (file != NULL) {
         studentCount = 0;
         memset(students, 0, sizeof(students));
-
         struct Student student;
-
         while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
             students[studentCount++] = student;
         }
-
         fclose(file);
-
         qsort(students, studentCount, sizeof(struct Student), (int (*)(const void *, const void *))compareIntegers);
-
         printf("%-20s%-20s%-20s%-20s%-10s\n", "Name", "Father's Name", "Phone Number", "Faculty", "ID");
-
         for (int i = 0; i < studentCount; i++) {
             printf("%-20s%-20s%-20s%-20s%-10d\n", students[i].name, students[i].fatherName, students[i].phoneNumber, students[i].faculty, students[i].id);
         }
@@ -346,13 +333,10 @@ void viewAllStudents() {
 }
 void deleteStudentData() {
     printf("Warning: This will clear all student data. Are you sure you want to proceed? (Y/N): ");
-
     char choice;
     scanf(" %c", &choice);
-
     if (choice == 'Y' || choice == 'y') {
         FILE *file = fopen("Storage/student.txt", "w");
-
         if (file != NULL) {
             fclose(file);
             printf("Student data cleared successfully.\n");
@@ -366,17 +350,13 @@ void deleteStudentData() {
 void infoSeparation() {
     char faculty[50];
     int studentCount = 0;
-
     printf("Enter faculty name: ");
     scanf(" %[^\n]s", faculty);
-
     FILE *file = fopen("Storage/student.txt", "r");
-
     if (file != NULL) {
         struct Student student;
-
         while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
-            if (strcmp(student.faculty, faculty) == 0) {
+            if (strcasecmp(student.faculty, faculty) == 0) {
                 if (studentCount == 0) {
                     printf("Name: ");
                 }
@@ -384,9 +364,7 @@ void infoSeparation() {
                 studentCount++;
             }
         }
-
         fclose(file);
-
         if (studentCount > 0) {
             printf("\nTotal students with faculty '%s': %d\n", faculty, studentCount);
         } else {
@@ -399,62 +377,66 @@ void infoSeparation() {
 
 //result settings
 void addResult() {
-    system("cls");
-    struct Result result;
+    while (1) {
+        system("cls");
+        struct Result result;
 
-    printf("Enter student ID: ");
-    scanf("%d", &result.studentId);
+        printf("Enter student ID: ");
+        scanf("%d", &result.studentId);
 
-    // Check if the student ID exists in student.txt
-    if (!isStudentIdExists(result.studentId)) {
-        printf("Student with ID %d does not exist.\n", result.studentId);
-        return;
-    }
+        if (!isStudentIdExists(result.studentId)) {
+            printf("Student with ID %d does not exist.\n", result.studentId);
+            break;
+        }
 
-    // Check if the result file exists
-    FILE *file = fopen("Storage/result.txt", "a");
-    if (file == NULL) {
-        printf("Result file does not exist or could not be opened.\n");
-        return;
-    }
+        FILE *file = fopen("Storage/result.txt", "a");
+        if (file == NULL) {
+            printf("Result file does not exist or could not be opened.\n");
+            break;
+        }
 
-    // Check if the student ID already exists in result.txt
-    if (isResultIdExists(result.studentId)) {
-        printf("Result for student ID %d already exists.\n", result.studentId);
-        fclose(file);
-        return;
-    }
+        if (isResultIdExists(result.studentId)) {
+            printf("Result for student ID %d already exists.\n", result.studentId);
+            fclose(file);
+            break;
+        }
 
-    printf("Enter marks for the following subjects:\n");
+        printf("Enter marks for the following subjects:\n");
 
-    for (int i = 0; i < MAX_SUBJECTS; i++) {
-        printf("Enter marks for %s: ", subjectNames[i]);
-        scanf("%lf", &result.marks[i]);
-        while (result.marks[i] < 0 || result.marks[i] > 100) {
-            printf("Marks must be between 0 and 100. Please re-enter marks for %s: ", subjectNames[i]);
+        for (int i = 0; i < MAX_SUBJECTS; i++) {
+            printf("Enter marks for %s: ", subjectNames[i]);
             scanf("%lf", &result.marks[i]);
+            while (result.marks[i] < 0 || result.marks[i] > 100) {
+                printf("Marks must be between 0 and 100. Please re-enter marks for %s: ", subjectNames[i]);
+                scanf("%lf", &result.marks[i]);
+            }
+        }
+
+        result.totalMarks = 0.0;
+        for (int i = 0; i < MAX_SUBJECTS; i++) {
+            result.totalMarks += result.marks[i];
+        }
+
+        result.gpa = (result.totalMarks / (MAX_SUBJECTS * 100.0)) * 4.0;
+
+        fprintf(file, "%d ", result.studentId);
+        for (int i = 0; i < MAX_SUBJECTS; i++) {
+            fprintf(file, "%.2f ", result.marks[i]);
+        }
+        fprintf(file, "%.2f %.2f\n", result.totalMarks, result.gpa);
+
+        fclose(file);
+
+        printf("Result added successfully.\n");
+
+        char choice;
+        printf("Do you want to add another result? (Y/N): ");
+        scanf(" %c", &choice);
+
+        if (choice != 'Y' && choice != 'y') {
+            break;
         }
     }
-
-    // Calculate total marks
-    result.totalMarks = 0.0;
-    for (int i = 0; i < MAX_SUBJECTS; i++) {
-        result.totalMarks += result.marks[i];
-    }
-
-    // Calculate GPA
-    result.gpa = (result.totalMarks / 500.0 * 100.0) / 25.0;
-
-    // Append the result to the file
-    fprintf(file, "%d ", result.studentId);
-    for (int i = 0; i < MAX_SUBJECTS; i++) {
-        fprintf(file, "%.2f ", result.marks[i]);
-    }
-    fprintf(file, "%.2f %.2f\n", result.totalMarks, result.gpa);
-
-    fclose(file);
-
-    printf("Result added successfully.\n");
 }
 void viewResult() {
     system("cls");
@@ -462,14 +444,12 @@ void viewResult() {
     printf("Enter the student ID to view results: ");
     scanf("%d", &id);
 
-    // Check if the result file exists
     FILE *resultFile = fopen("Storage/result.txt", "r");
     if (resultFile == NULL) {
         printf("Result file does not exist or could not be opened.\n");
         return;
     }
 
-    // Check if the student file exists
     FILE *studentFile = fopen("Storage/student.txt", "r");
     if (studentFile == NULL) {
         printf("Student file does not exist or could not be opened.\n");
@@ -477,21 +457,18 @@ void viewResult() {
         return;
     }
 
-    int found = 0; // Flag to indicate if the ID was found
+    int found = 0;
     int studentId;
     struct Result result;
 
-    // Read data from the result file
     while (fscanf(resultFile, "%d", &studentId) == 1) {
         if (studentId == id) {
-            // Found the matching ID
             result.studentId = studentId;
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 fscanf(resultFile, "%lf", &result.marks[i]);
             }
             fscanf(resultFile, "%lf %lf", &result.totalMarks, &result.gpa);
 
-            // Read the student name from student.txt
             char studentName[50];
             while (fscanf(studentFile, "%s", studentName) == 1) {
                 fscanf(studentFile, "%*s %*s %*s %*s %d", &studentId);
@@ -500,9 +477,8 @@ void viewResult() {
                 }
             }
 
-            found = 1; // ID found
+            found = 1;
 
-            // Print the result details with larger and centered borders
             printf("+--------------------------------------------+\n");
             printf("|                Student Results             |\n");
             printf("+--------------------------------------------+\n");
@@ -514,16 +490,15 @@ void viewResult() {
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 printf("| %-17s | %-12.2f           |\n", subjectNames[i], result.marks[i]);
             }
-             printf("+-------------------+------------------------+\n");
+            printf("+-------------------+------------------------+\n");
             printf("| Total Marks       | %-12.2f           |\n", result.totalMarks);
             printf("+-------------------+------------------------+\n");
             printf("| GPA               | %-12.2f           |\n", result.gpa);
             printf("+--------------------------------------------+\n");
             printf("\n");
-            break; // No need to continue searching
+            break;
         }
 
-        // Skip the rest of the line in result.txt
         while (fgetc(resultFile) != '\n') {
             if (feof(resultFile)) {
                 break;
@@ -544,14 +519,12 @@ void editResult() {
     printf("Enter the student ID to edit results: ");
     scanf("%d", &id);
 
-    // Check if the result file exists
     FILE *file = fopen("Storage/result.txt", "r");
     if (file == NULL) {
         printf("Result file does not exist or could not be opened.\n");
         return;
     }
 
-    // Create a temporary file to store edited results
     FILE *tempFile = fopen("Storage/temp_result.txt", "w");
     if (tempFile == NULL) {
         fclose(file);
@@ -559,21 +532,18 @@ void editResult() {
         return;
     }
 
-    int found = 0; // Flag to indicate if the ID was found
+    int found = 0;
     int studentId;
     struct Result result;
 
-    // Read data from the result file, edit the result if found
     while (fscanf(file, "%d", &studentId) == 1) {
         if (studentId == id) {
-            // Found the matching ID
             result.studentId = studentId;
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 fscanf(file, "%lf", &result.marks[i]);
             }
             fscanf(file, "%lf %lf", &result.totalMarks, &result.gpa);
 
-            // Edit marks
             printf("Editing marks for Student ID: %d\n", result.studentId);
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 printf("Enter new marks for %s: ", subjectNames[i]);
@@ -584,7 +554,6 @@ void editResult() {
                 }
             }
 
-            // Recalculate total marks and GPA
             result.totalMarks = 0.0;
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 result.totalMarks += result.marks[i];
@@ -597,9 +566,8 @@ void editResult() {
             }
             fprintf(tempFile, "%.2f %.2f\n", result.totalMarks, result.gpa);
 
-            found = 1; // ID found, edited, and written to temp file
+            found = 1;
         } else {
-            // Copy the non-matching result to the temp file
             fprintf(tempFile, "%d ", studentId);
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 double marks;
@@ -611,7 +579,6 @@ void editResult() {
             fprintf(tempFile, "%.2f %.2f\n", totalMarks, gpa);
         }
 
-        // Skip the rest of the line
         while (fgetc(file) != '\n') {
             if (feof(file)) {
                 break;
@@ -625,7 +592,6 @@ void editResult() {
     if (!found) {
         printf("Student with ID %d not found in results.\n", id);
     } else {
-        // Replace the original result file with the temp file
         remove("Storage/result.txt");
         rename("Storage/temp_result.txt", "Storage/result.txt");
 
@@ -638,14 +604,12 @@ void deleteResult() {
     printf("Enter the student ID to delete results: ");
     scanf("%d", &id);
 
-    // Check if the result file exists
     FILE *file = fopen("Storage/result.txt", "r");
     if (file == NULL) {
         printf("Result file does not exist or could not be opened.\n");
         return;
     }
 
-    // Create a temporary file to store results after deletion
     FILE *tempFile = fopen("Storage/temp_result.txt", "w");
     if (tempFile == NULL) {
         fclose(file);
@@ -653,17 +617,14 @@ void deleteResult() {
         return;
     }
 
-    int found = 0; // Flag to indicate if the ID was found
+    int found = 0;
     int studentId;
     struct Result result;
 
-    // Read data from the result file, skip the result if found
     while (fscanf(file, "%d", &studentId) == 1) {
         if (studentId == id) {
-            // Found the matching ID, skip this result
-            found = 1; // ID found and skipped
+            found = 1;
         } else {
-            // Copy the non-matching result to the temp file
             fprintf(tempFile, "%d ", studentId);
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 double marks;
@@ -675,7 +636,6 @@ void deleteResult() {
             fprintf(tempFile, "%.2f %.2f\n", totalMarks, gpa);
         }
 
-        // Skip the rest of the line
         while (fgetc(file) != '\n') {
             if (feof(file)) {
                 break;
@@ -689,7 +649,6 @@ void deleteResult() {
     if (!found) {
         printf("Student with ID %d not found in results.\n", id);
     } else {
-        // Replace the original result file with the temp file
         remove("Storage/result.txt");
         rename("Storage/temp_result.txt", "Storage/result.txt");
 
@@ -699,38 +658,48 @@ void deleteResult() {
 
 //account settings 
 void addAccount() {
-    system("cls");
-    struct Account newAccount;
-    int studentId;
-    int studentIdValid = 0;
+    while (1) {
+        system("cls");
+        struct Account newAccount;
+        int studentId;
+        int studentIdValid = 0;
 
-    do {
-        printf("Enter Student ID: ");
-        scanf("%d", &studentId);
+        do {
+            printf("Enter Student ID: ");
+            scanf("%d", &studentId);
 
-        if (!isStudentIdExists(studentId)) {
-            printf("Error: Student ID does not exist. Please enter a valid ID.\n");
-            getchar(); // Pause and wait for Enter
-        } else if (!isStudentIdUniqueInAccountFile(studentId)) {
-            printf("Error: Account already exists for Student ID %d.\n", studentId);
-            getchar(); // Pause and wait for Enter
+            if (!isStudentIdExists(studentId)) {
+                printf("Error: Student ID does not exist. Please enter a valid ID.\n");
+                getchar();
+            } else if (!isStudentIdUniqueInAccountFile(studentId)) {
+                printf("Error: Account already exists for Student ID %d.\n", studentId);
+                getchar();
+            } else {
+                studentIdValid = 1;
+            }
+        } while (!studentIdValid);
+
+        printf("Enter Fee Amount: ");
+        scanf("%lf", &newAccount.feeAmount);
+        newAccount.feePaid = 0;
+        newAccount.studentId = studentId;
+
+        FILE *accountFile = fopen("Storage/account.txt", "a");
+        if (accountFile != NULL) {
+            fprintf(accountFile, "%d %.2lf %.2lf\n", newAccount.studentId, newAccount.feeAmount, newAccount.feePaid);
+            fclose(accountFile);
+            printf("Account added successfully.\n");
         } else {
-            studentIdValid = 1;
+            printf("Error: Unable to open account file for writing.\n");
         }
-    } while (!studentIdValid);
 
-    printf("Enter Fee Amount: ");
-    scanf("%lf", &newAccount.feeAmount);
-    newAccount.feePaid = 0;
-    newAccount.studentId = studentId;
+        char choice;
+        printf("Do you want to add another account? (Y/N): ");
+        scanf(" %c", &choice);
 
-    FILE *accountFile = fopen("Storage/account.txt", "a");
-    if (accountFile != NULL) {
-        fprintf(accountFile, "%d %.2lf %.2lf\n", newAccount.studentId, newAccount.feeAmount, newAccount.feePaid);
-        fclose(accountFile);
-        printf("Account added successfully.\n");
-    } else {
-        printf("Error: Unable to open account file for writing.\n");
+        if (choice != 'Y' && choice != 'y') {
+            break;
+        }
     }
 }
 void viewAccount() {
