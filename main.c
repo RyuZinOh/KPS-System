@@ -1,10 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <conio.h>
+#include <unistd.h>
 
 #define MAX_STUDENTS 100
 #define MAX_SUBJECTS 5
+#define MAX_ATTEMPTS 5
+
+struct userAccount {
+    char username[100];
+    char password[100];
+    char securityAnswer[100];
+};
 
 struct Student {
     char name[50];
@@ -50,6 +57,13 @@ void showHelp() {
     } else {
         printf("Error: Unable to open help file.\n");
     }
+}
+
+//shortcut 
+void easy(){
+    printf("Press Enter to continue...");
+    while (getchar() != '\n');
+    getchar();
 }
 
 //important checks
@@ -144,8 +158,10 @@ void addStudent() {
                 fprintf(file, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, student.id);
                 fclose(file);
                 printf("Student record added successfully.\n");
+                sleep(1);
             } else {
                 printf("Error: Unable to open file for appending.\n");
+                sleep(1);
             }
         }
 
@@ -173,11 +189,15 @@ void viewStudentById() {
         while (fscanf(file, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
             if (student.id == studentId) {
                 found = 1;
-                printf("Student ID: %d\n", student.id);
+
+                printf("--------------------------------\n");
+                printf("Viewing Student ID: %d\n", student.id);
+                printf("--------------------------------\n");
                 printf("Name: %s\n", student.name);
                 printf("Father's Name: %s\n", student.fatherName);
                 printf("Phone Number: %s\n", student.phoneNumber);
                 printf("Faculty: %s\n", student.faculty);
+                printf("--------------------------------\n");
                 break;
             }
         }
@@ -186,9 +206,11 @@ void viewStudentById() {
 
         if (!found) {
             printf("Student with ID %d not found.\n", studentId);
+            sleep(1); 
         }
     } else {
         printf("Error: Unable to open file for reading.\n");
+        sleep(1); 
     }
 }
 void editStudentById() {
@@ -229,11 +251,14 @@ void editStudentById() {
 
         if (!found) {
             printf("Student with ID %d not found.\n", studentId);
+            sleep(1);
         } else {
             printf("Student record updated successfully.\n");
+            sleep(1);
         }
     } else {
         printf("Error: Unable to open file for reading and writing.\n");
+        sleep(1);
     }
 }
 void deleteStudentById() {
@@ -267,11 +292,14 @@ void deleteStudentById() {
 
         if (!found) {
             printf("Student with ID %d not found.\n", studentId);
+            sleep(1);
         } else {
             printf("Student record deleted successfully.\n");
+            sleep(1);
         }
     } else {
         printf("Error: Unable to open file for reading and writing.\n");
+        sleep(1);
     }
 }
 
@@ -285,11 +313,14 @@ void clearResultData() {
         if (resultFile != NULL) {
             fclose(resultFile);
             printf("Result data cleared successfully.\n");
+            sleep(1);
         } else {
             printf("Error: Unable to open result file for clearing data.\n");
+            sleep(1);
         }
     } else {
         printf("Clearing result data canceled.\n");
+        sleep(1);
     }
 }
 void clearAccountData() {
@@ -301,8 +332,10 @@ void clearAccountData() {
         if (accountFile != NULL) {
             fclose(accountFile);
             printf("Account data cleared successfully.\n");
+            sleep(1);
         } else {
             printf("Error: Unable to open account file for writing.\n");
+            sleep(1);
         }
     } else {
         printf("Clearing account data canceled.\n");
@@ -316,22 +349,37 @@ int compareIntegers(void *a, void *b) {
 void viewAllStudents() {
     FILE *file = fopen("Storage/student.txt", "r");
     if (file != NULL) {
-        studentCount = 0;
-        memset(students, 0, sizeof(students));
+        int studentCount = 0;
+        struct Student students[100]; // Adjust the array size as needed
+
         struct Student student;
         while (fscanf(file, "%49s %49s %14s %49s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
-            students[studentCount++] = student;
+            if (studentCount < 100) { // Ensure we don't exceed the array size
+                students[studentCount++] = student;
+            }
         }
         fclose(file);
+
         qsort(students, studentCount, sizeof(struct Student), (int (*)(const void *, const void *))compareIntegers);
-        printf("%-20s%-20s%-20s%-20s%-10s\n", "Name", "Father's Name", "Phone Number", "Faculty", "ID");
+
+        // Print the table header
+        printf("+----------------------+----------------------+----------------------+----------------------+----------+\n");
+        printf("| %-20s | %-20s | %-20s | %-20s | %-8s |\n", "Name", "Father's Name", "Phone Number", "Faculty", "ID");
+        printf("+----------------------+----------------------+----------------------+----------------------+----------+\n");
+
+        // Print student data
         for (int i = 0; i < studentCount; i++) {
-            printf("%-20s%-20s%-20s%-20s%-10d\n", students[i].name, students[i].fatherName, students[i].phoneNumber, students[i].faculty, students[i].id);
+            printf("| %-20s | %-20s | %-20s | %-20s | %-8d |\n", students[i].name, students[i].fatherName, students[i].phoneNumber, students[i].faculty, students[i].id);
         }
+
+        // Print the table footer
+        printf("+----------------------+----------------------+----------------------+----------------------+----------+\n");
     } else {
         printf("Error: Unable to open file for reading.\n");
+        sleep(1);
     }
 }
+
 void deleteStudentData() {
     printf("Warning: This will clear all student data. Are you sure you want to proceed? (Y/N): ");
     char choice;
@@ -341,11 +389,14 @@ void deleteStudentData() {
         if (file != NULL) {
             fclose(file);
             printf("Student data cleared successfully.\n");
+            sleep(1);
         } else {
             printf("Error: Unable to open file for clearing student data.\n");
+            sleep(1);
         }
     } else {
         printf("Clearing student data canceled.\n");
+        sleep(1);
     }
 }
 void infoSeparation() {
@@ -370,9 +421,11 @@ void infoSeparation() {
             printf("\nTotal students with faculty '%s': %d\n", faculty, studentCount);
         } else {
             printf("No students found with faculty '%s'.\n", faculty);
+            sleep(1);
         }
     } else {
         printf("Error: Unable to open file for reading.\n");
+        sleep(1);
     }
 }
 
@@ -387,17 +440,20 @@ void addResult() {
 
         if (!isStudentIdExists(result.studentId)) {
             printf("Student with ID %d does not exist.\n", result.studentId);
+            sleep(1);
             break;
         }
 
         FILE *file = fopen("Storage/result.txt", "a");
         if (file == NULL) {
             printf("Result file does not exist or could not be opened.\n");
+            sleep(1);
             break;
         }
 
         if (isResultIdExists(result.studentId)) {
             printf("Result for student ID %d already exists.\n", result.studentId);
+            sleep(1);
             fclose(file);
             break;
         }
@@ -429,6 +485,7 @@ void addResult() {
         fclose(file);
 
         printf("Result added successfully.\n");
+        sleep(1);
 
         char choice;
         printf("Do you want to add another result? (Y/N): ");
@@ -448,12 +505,14 @@ void viewResult() {
     FILE *resultFile = fopen("Storage/result.txt", "r");
     if (resultFile == NULL) {
         printf("Result file does not exist or could not be opened.\n");
+        sleep(1);
         return;
     }
 
     FILE *studentFile = fopen("Storage/student.txt", "r");
     if (studentFile == NULL) {
         printf("Student file does not exist or could not be opened.\n");
+        sleep(1);
         fclose(resultFile);
         return;
     }
@@ -512,6 +571,7 @@ void viewResult() {
 
     if (!found) {
         printf("Student with ID %d not found in results.\n", id);
+        sleep(1);
     }
 }
 void editResult() {
@@ -523,6 +583,7 @@ void editResult() {
     FILE *file = fopen("Storage/result.txt", "r");
     if (file == NULL) {
         printf("Result file does not exist or could not be opened.\n");
+        sleep(1);
         return;
     }
 
@@ -530,6 +591,7 @@ void editResult() {
     if (tempFile == NULL) {
         fclose(file);
         printf("Error creating temporary file.\n");
+        sleep(1);
         return;
     }
 
@@ -597,6 +659,7 @@ void editResult() {
         rename("Storage/temp_result.txt", "Storage/result.txt");
 
         printf("Result edited successfully.\n");
+        sleep(1);
     }
 }
 void deleteResult() {
@@ -608,6 +671,7 @@ void deleteResult() {
     FILE *file = fopen("Storage/result.txt", "r");
     if (file == NULL) {
         printf("Result file does not exist or could not be opened.\n");
+        sleep(1);
         return;
     }
 
@@ -615,6 +679,7 @@ void deleteResult() {
     if (tempFile == NULL) {
         fclose(file);
         printf("Error creating temporary file.\n");
+        sleep(1);
         return;
     }
 
@@ -649,11 +714,13 @@ void deleteResult() {
 
     if (!found) {
         printf("Student with ID %d not found in results.\n", id);
+        sleep(1);
     } else {
         remove("Storage/result.txt");
         rename("Storage/temp_result.txt", "Storage/result.txt");
 
         printf("Result deleted successfully.\n");
+        sleep(1);
     }
 }
 
@@ -690,8 +757,10 @@ void addAccount() {
             fprintf(accountFile, "%d %.2lf %.2lf\n", newAccount.studentId, newAccount.feeAmount, newAccount.feePaid);
             fclose(accountFile);
             printf("Account added successfully.\n");
+            sleep(1);
         } else {
             printf("Error: Unable to open account file for writing.\n");
+            sleep(1);
         }
 
         char choice;
@@ -712,33 +781,38 @@ void viewAccount() {
     FILE *studentFile = fopen("Storage/student.txt", "r");
     if (studentFile != NULL) {
         struct Student student;
-        int found = 0;
+        int foundStudent = 0;
 
         while (fscanf(studentFile, "%s %s %s %s %d\n", student.name, student.fatherName, student.phoneNumber, student.faculty, &student.id) == 5) {
             if (student.id == studentId) {
-                found = 1;
+                foundStudent = 1;
                 break;
             }
         }
 
         fclose(studentFile);
 
-        if (found) {
+        if (foundStudent) {
             FILE *accountFile = fopen("Storage/account.txt", "r");
             if (accountFile != NULL) {
                 struct Account account;
-                found = 0;
+                int foundAccount = 0;
 
                 while (fscanf(accountFile, "%d %lf %lf\n", &account.studentId, &account.feeAmount, &account.feePaid) == 3) {
                     if (account.studentId == studentId) {
-                        found = 1;
+                        foundAccount = 1;
                         double feeRemaining = account.feeAmount - account.feePaid;
 
-                        printf("Account Details for Student ID %d:\n", studentId);
-                        printf("Student Name: %s\n", student.name);
-                        printf("Fee Paid: Rs %.2lf\n", account.feePaid);
-                        printf("Total Fee: Rs %.2lf\n", account.feeAmount);
-                        printf("Fee Remaining: Rs %.2lf\n", feeRemaining);
+                        printf("--------------------------------------\n");
+                        printf("            Account Details           \n");
+                        printf("--------------------------------------\n");
+                        printf(" Student ID: %d\n", studentId);
+                        printf(" Student Name: %s\n", student.name);
+                        printf(" Fee Paid: Rs %lf           \n", account.feePaid);
+                        printf(" Total Fee: Rs %lf          \n", account.feeAmount);
+                        printf(" Fee Remaining: Rs %lf      \n", feeRemaining);
+                        printf("--------------------------------------\n");
+                        printf("\n");
 
                         break;
                     }
@@ -746,17 +820,21 @@ void viewAccount() {
 
                 fclose(accountFile);
 
-                if (!found) {
+                if (!foundAccount) {
                     printf("No account found for Student ID %d.\n", studentId);
+                    sleep(1); 
                 }
             } else {
                 printf("Error: Unable to open account file for reading.\n");
+                sleep(1); 
             }
         } else {
             printf("Student with ID %d not found.\n", studentId);
+            sleep(1); 
         }
     } else {
         printf("Error: Unable to open student file for reading.\n");
+        sleep(1); 
     }
 }
 void deleteAccount() {
@@ -786,19 +864,25 @@ void deleteAccount() {
             if (found) {
                 if (remove("Storage/account.txt") != 0) {
                     printf("Error: Unable to delete the account file.\n");
+                    sleep(1);
                 } else if (rename("Storage/temp_account.txt", "Storage/account.txt") != 0) {
                     printf("Error: Unable to update the account file.\n");
+                    sleep(1);
                 } else {
                     printf("Account for Student ID %d deleted successfully.\n", studentId);
+                    sleep(1);
                 }
             } else {
                 printf("No account found for Student ID %d.\n", studentId);
+                sleep(1);
             }
         } else {
             printf("Error: Unable to open temporary account file for writing.\n");
+            sleep(1);
         }
     } else {
         printf("Error: Unable to open account file for reading.\n");
+        sleep(1);
     }
 }
 void editAccount() {
@@ -830,19 +914,25 @@ void editAccount() {
             if (found) {
                 if (remove("Storage/account.txt") != 0) {
                     printf("Error: Unable to delete the account file.\n");
+                    sleep(1);
                 } else if (rename("Storage/temp_account.txt", "Storage/account.txt") != 0) {
                     printf("Error: Unable to update the account file.\n");
+                    sleep(1);
                 } else {
                     printf("Total fee for Student ID %d updated successfully.\n", studentId);
+                    sleep(1);
                 }
             } else {
                 printf("No account found for Student ID %d.\n", studentId);
+                sleep(1);
             }
         } else {
             printf("Error: Unable to open temporary account file for writing.\n");
+            sleep(1);
         }
     } else {
         printf("Error: Unable to open account file for reading.\n");
+        sleep(1);
     }
 }
 void updateAccount() {
@@ -874,19 +964,25 @@ void updateAccount() {
             if (found) {
                 if (remove("Storage/account.txt") != 0) {
                     printf("Error: Unable to delete the account file.\n");
+                    sleep(1);
                 } else if (rename("Storage/temp_account.txt", "Storage/account.txt") != 0) {
                     printf("Error: Unable to update the account file.\n");
+                    sleep(1);
                 } else {
                     printf("Account for Student ID %d updated successfully.\n", studentId);
+                    sleep(1);
                 }
             } else {
                 printf("No account found for Student ID %d.\n", studentId);
+                sleep(1);
             }
         } else {
             printf("Error: Unable to open temporary account file for writing.\n");
+            sleep(1);
         }
     } else {
         printf("Error: Unable to open account file for reading.\n");
+        sleep(1);
     }
 }
 
@@ -925,11 +1021,9 @@ void handleStudent() {
                 return;
             default:
                 printf("Invalid choice. Please select a valid option.\n");
+                sleep(1);
         }
-
-        printf("Press Enter to continue...");
-        while (getchar() != '\n');
-        getchar();
+        easy();
     }
 }
 void handleAccount() {
@@ -972,10 +1066,7 @@ void handleAccount() {
             default:
                 printf("Invalid choice. Please select a valid option.\n");
         }
-
-        printf("Press Enter to continue...");
-        while (getchar() != '\n');
-        getchar();
+       easy();
     }
 }
 void handleResult() {
@@ -1014,9 +1105,7 @@ void handleResult() {
                 printf("Invalid choice. Please select a valid option.\n");
         }
 
-        printf("Press Enter to continue...");
-        while (getchar() != '\n');
-        getchar();
+     void easy();   
     }
 }
 void handleInformation() {
@@ -1065,105 +1154,260 @@ void handleInformation() {
         getchar();
     }
 }
-
-// Function to check username and password
-int checkCredentials(char *username, char *password) {
-    FILE *adminFile = fopen("Administration/admin.txt", "r");
-    if (adminFile == NULL) {
-        printf("Error: Unable to open admin file.\n");
-        return 0;
-    }
-
-    char correctUsername[100];
-    char correctPassword[100];
-
-    if (fscanf(adminFile, "%s %s", correctUsername, correctPassword) != 2) {
-        printf("Error: Invalid admin file format.\n");
-        fclose(adminFile);
-        return 0;
-    }
-
-    fclose(adminFile);
-
-    return (strcmp(username, correctUsername) == 0 && strcmp(password, correctPassword) == 0);
-}
-
-//Main Function
-int main() {
-    char username[100];
-    char password[100];
+void mainMenu() {
     int choice;
 
-    printf("Enter Username: ");
-    scanf("%s", username);
-
-   printf("Enter Password: ");
-    int i = 0;
     while (1) {
-        char c = _getch();
-        if (c == '\r') {
-            password[i] = '\0';  
-            break;
-        } else if (c == 8 && i > 0) {
-            printf("\b \b");
-            i--;
-        } else if (c != 8) {
-            password[i] = c;
-            i++;
-            printf("*");  
+        system("cls");
+        FILE *menuFile = fopen("UI/main.txt", "r");
+        if (menuFile == NULL) {
+            printf("Error opening the menu file.\n");
+            sleep(1);
+            return;
+        }
+
+        char line[256];
+        while (fgets(line, sizeof(line), menuFile)) {
+            printf("%s", line);
+        }
+
+        fclose(menuFile);
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                handleStudent();
+                break;
+            case 2:
+                handleAccount();
+                break;
+            case 3:
+                handleResult();
+                break;
+            case 4:
+                handleInformation();
+                break;
+            case 5:
+                showHelp();
+                break;
+            case 6:
+                printf("Exiting program.\n");
+                sleep(1);
+                exit(0);
+            default:
+                printf("Invalid choice. Please select a valid option.\n");
+                sleep(1);
+        }
+     easy();
+    }
+}
+
+//login panel settings 
+int isUsernameTaken(char *username) {
+    FILE *file = fopen("Administration/admin.txt", "r");
+    if (file == NULL) {
+        return 0;
+    }
+
+    char line[300];
+    while (fgets(line, sizeof(line), file)) {
+        char savedUsername[100];
+        sscanf(line, "%s", savedUsername);
+        if (strcmp(savedUsername, username) == 0) {
+            fclose(file);
+            return 1;
         }
     }
 
-    if (checkCredentials(username, password)) {
-        printf("\nAccess Granted. Welcome!\n");
-        while (1) {
-            system("cls");
+    fclose(file);
+    return 0;
+}
+int containsUppercase(char *str) {
+    for (int i = 0; str[i]; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z') {
+            return 1;  // Uppercase character found
+        }
+    }
+    return 0;  // No uppercase characters found
+}
+void resetPassword() {
+    system("cls");
+    struct userAccount user;
+    char enteredUsername[100];
+    char enteredSecurityAnswer[100];
 
-            FILE *file = fopen("UI/main.txt", "r");
-            if (file == NULL) {
-                printf("Error opening the menu file.\n");
-                return 1;
-            }
+    printf("Password Reset\n");
+    printf("Enter your username: ");
+    scanf("%s", enteredUsername);
 
-            char line[256];
-            while (fgets(line, sizeof(line), file)) {
-                printf("%s", line);
-            }
+    if (!isUsernameTaken(enteredUsername)) {
+        printf("Username not found. Password reset failed.\n");
+        sleep(1);
+        return;
+    }
 
-            fclose(file);
+    FILE *file = fopen("Administration/admin.txt", "r+");
+    if (file == NULL) {
+        printf("Error opening the file.\n");
+        sleep(1);
+        return;
+    }
 
-            printf("Enter your choice: ");
-            scanf("%d", &choice);
+    int found = 0;
+    while (fscanf(file, "%s %s %s", user.username, user.password, user.securityAnswer) != EOF) {
+        if (strcmp(enteredUsername, user.username) == 0) {
+            found = 1;
+            break;
+        }
+    }
 
-            switch (choice) {
-                case 1:
-                    handleStudent();
-                    break;
-                case 2:
-                    handleAccount();
-                    break;
-                case 3:
-                    handleResult();
-                    break;
-                case 4:
-                    handleInformation();
-                    break;
-                case 5:
-                    showHelp();
-                    break;
-                case 6:
-                    printf("Exiting program.\n");
-                    exit(0);
-                default:
-                    printf("Invalid choice. Please select a valid option.\n");
-            }
+    if (found) {
+        printf("Security Question: What is your favorite anime? ");
+        scanf("%s", enteredSecurityAnswer);
 
-            printf("Press Enter to continue...");
-            while (getchar() != '\n');
-            getchar();
+        if (strcasecmp(enteredSecurityAnswer, user.securityAnswer) == 0) {
+            printf("Security answer is correct. Please enter a new password: ");
+            scanf("%s", user.password);
+
+            // Rewind the file to the beginning
+            rewind(file);
+
+            // Update the password in the file
+            fprintf(file, "%s %s %s\n", user.username, user.password, user.securityAnswer);
+
+            printf("Password has been reset successfully.\n");
+            sleep(1);
+        } else {
+            printf("Security answer is incorrect. Password reset failed.\n");
+            sleep(1);
         }
     } else {
-        printf("Access Denied. Invalid username or password.\n");
+        printf("Username not found. Password reset failed.\n");
+        sleep(1);
     }
+
+    fclose(file);
+}
+
+//login main panel settings
+void signUp() {
+    system("cls");
+    struct userAccount newUser;
+
+    printf("Sign Up\n------------\n");
+
+    do {
+        printf("Enter a username :");
+        scanf("%s", newUser.username);
+
+        if (containsUppercase(newUser.username)) {
+            printf("Error: Username must be in lowercase only. Please enter a valid username.\n");
+        } else if (isUsernameTaken(newUser.username)) {
+            printf("Error: Username already exists. Please choose a different username.\n");
+        }
+    } while (isUsernameTaken(newUser.username) || containsUppercase(newUser.username));
+
+    printf("Enter a password :");
+    scanf("%s", newUser.password);
+
+    printf("What is your favorite anime? ");
+    scanf("%s", newUser.securityAnswer);
+
+    FILE *file = fopen("Administration/admin.txt", "a");
+    if (file == NULL) {
+        printf("Error opening the file.\n");
+        sleep(1);
+        return;
+    }
+
+    fprintf(file, "%s %s %s\n", newUser.username, newUser.password, newUser.securityAnswer);
+    fclose(file);
+
+    printf("Account created successfully.\n");
+    sleep(1);
+}
+void signIn() {
+    system("cls");
+    struct userAccount user;
+    char enteredUsername[100];
+    char enteredPassword[100];
+    int attempts = 0;
+
+    printf("Sign In\n");
+    printf("------------\n");
+
+    while (attempts < MAX_ATTEMPTS) {
+        printf("Enter your username: ");
+        scanf("%s", enteredUsername);
+        printf("Enter your password: ");
+        scanf("%s", enteredPassword);
+
+        FILE *file = fopen("Administration/admin.txt", "r");
+        if (file == NULL) {
+            printf("Error opening the file.\n");
+            sleep(1);
+            return;
+        }
+
+        int found = 0;
+        while (fscanf(file, "%s %s %s", user.username, user.password, user.securityAnswer) != EOF) {
+            if (strcasecmp(enteredUsername, user.username) == 0 && strcmp(enteredPassword, user.password) == 0) {
+                found = 1;
+                break;
+            }
+        }
+
+        fclose(file);
+
+        if (found) {
+            printf("Sign-in successful. Welcome, %s!\n", user.username);
+            sleep(1); 
+            mainMenu();
+            return;
+        } else {
+            printf("Invalid username or password. Please try again.\n");
+            attempts++;
+            if (attempts >= MAX_ATTEMPTS) {
+                printf("You've exceeded the maximum number of sign-in attempts.\n");
+                sleep(1);
+                resetPassword(&user);
+            }
+        }
+    }
+}
+
+//main fucntion
+int main() {
+    int choice;
+
+    while (1) {
+        system("cls"); 
+        printf("loginPanel\n");
+        printf("1. Sign In (Already have an account?)\n");
+        printf("2. Sign Up (Don't have an account?)\n");
+        printf("3. Exit\n");
+
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                signIn();
+                break;
+            case 2:
+                signUp();
+                break;
+            case 3:
+                printf("Exiting program.\n");
+                sleep(1);
+                exit(0);
+            default:
+                printf("Invalid choice. Please select a valid option.\n");
+                sleep(1);
+        }
+    }
+
     return 0;
 }
