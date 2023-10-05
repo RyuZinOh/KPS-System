@@ -379,7 +379,6 @@ void viewAllStudents() {
         sleep(1);
     }
 }
-
 void deleteStudentData() {
     printf("Warning: This will clear all student data. Are you sure you want to proceed? (Y/N): ");
     char choice;
@@ -1378,16 +1377,21 @@ void signIn() {
     }
 }
 
-//main fucntion
+//main function 
 int main() {
     int choice;
 
     while (1) {
-        system("cls"); 
-        printf("loginPanel\n");
-        printf("1. Sign In (Already have an account?)\n");
-        printf("2. Sign Up (Don't have an account?)\n");
-        printf("3. Exit\n");
+        system("cls"); // For Windows. Use "clear" for Linux/Mac.
+        printf("*********************************************\n");
+        printf("*                Login Panel                *\n");
+        printf("*********************************************\n");
+        printf("*                                           *\n");
+        printf("* 1. Sign In (Already have an account?)     *\n");
+        printf("* 2. Sign Up (Don't have an account?)       *\n");
+        printf("* 3. Exit                                   *\n");
+        printf("*                                           *\n");
+        printf("*********************************************\n");
 
         printf("Enter your choice: ");
         scanf("%d", &choice);
