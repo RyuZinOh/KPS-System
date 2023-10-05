@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <conio.h>
 
 #define MAX_STUDENTS 100
 #define MAX_SUBJECTS 5
@@ -895,13 +896,15 @@ void handleStudent() {
 
     while (1) {
         system("cls");
-        printf("\nKPS-system\n");
-        printf("Student Menu\n");
+        printf("---------------------------------\n");
+        printf("   KPS-system - Student Menu\n");
+        printf("---------------------------------\n");
         printf("1. Add Student\n");
         printf("2. View Student by ID\n");
         printf("3. Delete Student by ID\n");
         printf("4. Edit Student by ID\n");
         printf("5. Back to Main Menu\n");
+        printf("---------------------------------\n");  
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -934,16 +937,19 @@ void handleAccount() {
 
     while (1) {
         system("cls");
-        printf("\nKPS-system\n");
-        printf("Account Menu\n");
+        printf("---------------------------------\n");
+        printf("   KPS-system - Account Menu\n");
+        printf("---------------------------------\n");
         printf("1. Add Account\n");
         printf("2. View Account\n");
         printf("3. Delete Account\n");
         printf("4. Edit Account\n");
         printf("5. Update Account\n");
         printf("6. Back to Main Menu\n");
+        printf("---------------------------------\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
+
 
         switch (choice) {
             case 1:
@@ -977,13 +983,15 @@ void handleResult() {
   
     while (1) {
         system("cls");
-        printf("\nKPS-system\n");
-        printf("Result Menu\n");
+        printf("---------------------------------\n");
+        printf("   KPS-system - Result Menu\n");
+        printf("---------------------------------\n");
         printf("1. Add Result\n");
         printf("2. View Result\n");
         printf("3. Delete Result\n");
         printf("4. Edit Result\n");
         printf("5. Back to Main Menu\n");
+        printf("---------------------------------\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -1016,15 +1024,19 @@ void handleInformation() {
 
     while (1) {
         system("cls");
-        printf("Information Menu\n");
+        printf("---------------------------------\n");
+        printf("   KPS-system - Information Menu\n");
+        printf("---------------------------------\n");
         printf("1. View All Students\n");
         printf("2. Delete Student Data\n");
         printf("3. Clear Result Data\n");
         printf("4. Clear Account Data\n");
         printf("5. Information Separation\n");
         printf("6. Back to Main Menu\n");
+        printf("---------------------------------\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
+
 
         switch (choice) {
             case 1:
@@ -1076,7 +1088,7 @@ int checkCredentials(char *username, char *password) {
     return (strcmp(username, correctUsername) == 0 && strcmp(password, correctPassword) == 0);
 }
 
-//main function
+//Main Function
 int main() {
     char username[100];
     char password[100];
@@ -1084,21 +1096,42 @@ int main() {
 
     printf("Enter Username: ");
     scanf("%s", username);
-    printf("Enter Password: ");
-    scanf("%s", password);
+
+   printf("Enter Password: ");
+    int i = 0;
+    while (1) {
+        char c = _getch();
+        if (c == '\r') {
+            password[i] = '\0';  
+            break;
+        } else if (c == 8 && i > 0) {
+            printf("\b \b");
+            i--;
+        } else if (c != 8) {
+            password[i] = c;
+            i++;
+            printf("*");  
+        }
+    }
 
     if (checkCredentials(username, password)) {
         printf("\nAccess Granted. Welcome!\n");
         while (1) {
             system("cls");
-            printf("\nKPS-system\n");
-            printf("Menu:\n");
-            printf("1. Student\n");
-            printf("2. Account\n");
-            printf("3. Result\n");
-            printf("4. Information\n");
-            printf("5. Help\n");
-            printf("6. Exit\n");
+
+            FILE *file = fopen("UI/main.txt", "r");
+            if (file == NULL) {
+                printf("Error opening the menu file.\n");
+                return 1;
+            }
+
+            char line[256];
+            while (fgets(line, sizeof(line), file)) {
+                printf("%s", line);
+            }
+
+            fclose(file);
+
             printf("Enter your choice: ");
             scanf("%d", &choice);
 
@@ -1132,8 +1165,5 @@ int main() {
     } else {
         printf("Access Denied. Invalid username or password.\n");
     }
-
     return 0;
-}  
-
-
+}
