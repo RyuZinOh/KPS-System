@@ -519,18 +519,21 @@ void viewResult() {
     int found = 0;
     int studentId;
     struct Result result;
+    char studentName[50]; // Add a variable to store student's name
+    char fatherName[50];
 
     while (fscanf(resultFile, "%d", &studentId) == 1) {
         if (studentId == id) {
             result.studentId = studentId;
+
+            // Read the student's results
             for (int i = 0; i < MAX_SUBJECTS; i++) {
                 fscanf(resultFile, "%lf", &result.marks[i]);
             }
             fscanf(resultFile, "%lf %lf", &result.totalMarks, &result.gpa);
 
-            char studentName[50];
-            while (fscanf(studentFile, "%s", studentName) == 1) {
-                fscanf(studentFile, "%*s %*s %*s %*s %d", &studentId);
+            // Find and read the student's name from student.txt
+            while (fscanf(studentFile, "%s %s %*s %*s %d", studentName, fatherName, &studentId) == 3) {
                 if (studentId == id) {
                     break;
                 }
@@ -538,6 +541,7 @@ void viewResult() {
 
             found = 1;
 
+            // Display the student's results with their name
             printf("+--------------------------------------------+\n");
             printf("|                Student Results             |\n");
             printf("+--------------------------------------------+\n");
@@ -555,6 +559,7 @@ void viewResult() {
             printf("| GPA               | %-12.2f           |\n", result.gpa);
             printf("+--------------------------------------------+\n");
             printf("\n");
+
             break;
         }
 
@@ -572,6 +577,7 @@ void viewResult() {
         printf("Student with ID %d not found in results.\n", id);
         sleep(1);
     }
+ easy();
 }
 void editResult() {
     system("cls");
@@ -1233,19 +1239,12 @@ int containsUppercase(char *str) {
 }
 void resetPassword() {
     system("cls");
-    struct userAccount user;
     char enteredUsername[100];
     char enteredSecurityAnswer[100];
 
     printf("Password Reset\n");
     printf("Enter your username: ");
     scanf("%s", enteredUsername);
-
-    if (!isUsernameTaken(enteredUsername)) {
-        printf("Username not found. Password reset failed.\n");
-        sleep(1);
-        return;
-    }
 
     FILE *file = fopen("Administration/admin.txt", "r+");
     if (file == NULL) {
@@ -1254,40 +1253,50 @@ void resetPassword() {
         return;
     }
 
+    struct userAccount user;
     int found = 0;
+
+    // Create a temporary file to store the updated data
+    FILE *tempFile = fopen("Administration/temp.txt", "w");
+    if (tempFile == NULL) {
+        printf("Error creating a temporary file.\n");
+        fclose(file);
+        sleep(1);
+        return;
+    }
+
     while (fscanf(file, "%s %s %s", user.username, user.password, user.securityAnswer) != EOF) {
         if (strcmp(enteredUsername, user.username) == 0) {
             found = 1;
-            break;
+            printf("Security Question: What is your favorite anime? ");
+            scanf("%s", enteredSecurityAnswer);
+
+            if (strcasecmp(enteredSecurityAnswer, user.securityAnswer) == 0) {
+                printf("Security answer is correct. Please enter a new password: ");
+                scanf("%s", user.password);
+            } else {
+                printf("Security answer is incorrect. Password reset failed.\n");
+            }
         }
-    }
 
-    if (found) {
-        printf("Security Question: What is your favorite anime? ");
-        scanf("%s", enteredSecurityAnswer);
-
-        if (strcasecmp(enteredSecurityAnswer, user.securityAnswer) == 0) {
-            printf("Security answer is correct. Please enter a new password: ");
-            scanf("%s", user.password);
-
-            // Rewind the file to the beginning
-            rewind(file);
-
-            // Update the password in the file
-            fprintf(file, "%s %s %s\n", user.username, user.password, user.securityAnswer);
-
-            printf("Password has been reset successfully.\n");
-            sleep(1);
-        } else {
-            printf("Security answer is incorrect. Password reset failed.\n");
-            sleep(1);
-        }
-    } else {
-        printf("Username not found. Password reset failed.\n");
-        sleep(1);
+        // Write the user's information to the temporary file
+        fprintf(tempFile, "%s %s %s\n", user.username, user.password, user.securityAnswer);
     }
 
     fclose(file);
+    fclose(tempFile);
+
+    // Replace the original file with the temporary file
+    remove("Administration/admin.txt");
+    rename("Administration/temp.txt", "Administration/admin.txt");
+
+    if (found) {
+        printf("Password has been reset successfully.\n");
+    } else {
+        printf("Username not found. Password reset failed.\n");
+    }
+
+    sleep(1);
 }
 
 //login main panel settings
